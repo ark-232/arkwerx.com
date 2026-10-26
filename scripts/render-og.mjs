@@ -1,5 +1,5 @@
 // Renders public/og.png from the running preview: `npm run preview`, then `node scripts/render-og.mjs`.
-import { chromium } from 'playwright';
+import { chromium } from '@playwright/test';
 
 const browser = await chromium.launch();
 const page = await browser.newPage({ bypassCSP: true, viewport: { width: 1200, height: 630 }, colorScheme: 'light', reducedMotion: 'reduce' });

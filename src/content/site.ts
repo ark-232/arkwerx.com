@@ -6,6 +6,7 @@ const link = z.strictObject({
   href: z.string().regex(/^https:\/\/[^\s]+$/),
 });
 const status = z.enum(['Shipped', 'Open source', 'In development']);
+export const STATUSES = status.options;
 
 const block = z.strictObject({
   name: z.string().min(1),
@@ -50,10 +51,7 @@ const Site = z.strictObject({
     ledger,
   })).min(1),
   education: z.array(z.strictObject({ credential: z.string(), detail: z.string().max(200), ledger })).min(1),
-  contact: z.strictObject({
-    intro: z.string().max(320),
-    topics: z.array(z.strictObject({ value: z.enum(['work', 'question', 'other']), label: z.string() })).length(3),
-  }),
+  contact: z.strictObject({ intro: z.string().max(320) }),
   updated: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
 });
 
@@ -349,11 +347,6 @@ export const site = Site.parse({
   contact: {
     intro:
       'Write if you would like to work together, have a question about quillify or the MCP server, or want a second set of eyes on something you are building. It comes straight to my inbox, and I reply from my own address.',
-    topics: [
-      { value: 'work', label: 'Working together' },
-      { value: 'question', label: 'A question about my work' },
-      { value: 'other', label: 'Something else' },
-    ],
   },
   updated: '2026-10-26',
 });

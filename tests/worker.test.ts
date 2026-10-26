@@ -1,14 +1,16 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import worker, { contact } from '../worker/index.ts';
+import worker, { contact, senderKey } from '../worker/index.ts';
 
 const ORIGIN = 'https://arkwerx.com';
 
-function fakeEnv({ limited = false, sendError = false } = {}) {
+function fakeEnv({ limited = false, sendError = false, to = 'first@example.com, second@example.com' } = {}) {
   const sent: unknown[] = [];
+  const keys: string[] = [];
   const env = {
-    CONTACT_TO: 'first@example.com, second@example.com',
-    CONTACT_LIMIT: { limit: async () => ({ success: !limited }) },
+    CONTACT_TO: to,
+    CONTACT_LIMIT: { limit: async ({ key }: { key: string }) => (keys.push(key), { success: !limited }) },
+    CONTACT_LIMIT_ALL: { limit: async () => ({ success: true }) },
     EMAIL: {
       send: async (message: unknown) => {
         if (sendError) throw Object.assign(new Error('down'), { code: 'E_INTERNAL_SERVER_ERROR' });
@@ -17,13 +19,13 @@ function fakeEnv({ limited = false, sendError = false } = {}) {
       },
     },
   };
-  return { env: env as never, sent };
+  return { env: env as never, sent, keys };
 }
 
-function post(fields: Record<string, string>, origin = ORIGIN) {
+function post(fields: Record<string, string>, origin = ORIGIN, ip = '203.0.113.7') {
   return new Request(`${ORIGIN}/api/contact`, {
     method: 'POST',
-    headers: { Origin: origin, 'CF-Connecting-IP': '203.0.113.7' },
+    headers: { Origin: origin, 'CF-Connecting-IP': ip },
     body: new URLSearchParams(fields),
   });
 }
@@ -83,12 +85,45 @@ test('rejects a message over 4,000 characters', async () => {
   assert.deepEqual(await res.json(), { error: 'invalid', fields: ['message'] });
 });
 
-test('strips line breaks from the name so it cannot add headers', async () => {
+test('turns control characters and line separators in the name into spaces', async () => {
+  for (const name of ['Ada\r\nBcc: someone@example.com', 'Ada\u2028Bcc: someone@example.com', 'Ada\u000bBcc: someone@example.com']) {
+    const { env, sent } = fakeEnv();
+    await contact(post({ ...valid, name }), env);
+    const message = sent[0] as { subject: string; replyTo: { name: string } };
+    assert.equal(message.subject, 'A question about my work: Ada Bcc: someone@example.com');
+    assert.ok(!/[\p{Cc}\p{Zl}\p{Zp}]/u.test(message.replyTo.name));
+  }
+});
+
+test('accepts a long message in a non-Latin script', async () => {
   const { env, sent } = fakeEnv();
-  await contact(post({ ...valid, name: 'Ada\r\nBcc: someone@example.com' }), env);
-  const message = sent[0] as { subject: string; replyTo: { name: string } };
-  assert.equal(message.subject, 'A question about my work: Ada Bcc: someone@example.com');
-  assert.ok(!/[\r\n]/.test(message.replyTo.name));
+  const message = 'ж'.repeat(4000);
+  const body = new URLSearchParams({ ...valid, message }).toString();
+  const res = await contact(
+    new Request(`${ORIGIN}/api/contact`, {
+      method: 'POST',
+      headers: { Origin: ORIGIN, 'CF-Connecting-IP': '203.0.113.7', 'Content-Length': String(Buffer.byteLength(body)) },
+      body: new URLSearchParams({ ...valid, message }),
+    }),
+    env,
+  );
+  assert.equal(res.status, 200);
+  assert.equal(sent.length, 1);
+});
+
+test('limits an IPv6 client by its /64', async () => {
+  assert.equal(senderKey('2001:db8:abcd:12:1:2:3:4'), '2001:db8:abcd:12');
+  assert.equal(senderKey('203.0.113.7'), '203.0.113.7');
+  const { env, keys } = fakeEnv();
+  await contact(post(valid, ORIGIN, '2001:db8:abcd:12:ffff::1'), env);
+  assert.deepEqual(keys, ['2001:db8:abcd:12']);
+});
+
+test('reports an empty recipient list instead of sending', async () => {
+  const { env, sent } = fakeEnv({ to: ' , ' });
+  const res = await contact(post(valid), env);
+  assert.equal(res.status, 502);
+  assert.equal(sent.length, 0);
 });
 
 test('stops at the rate limit and reports a send failure', async () => {

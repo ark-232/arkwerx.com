@@ -415,7 +415,7 @@ a:hover { text-decoration-thickness: 2px; }
   padding: 1rem 0 1.1rem;
   border-bottom: 1px solid var(--rule-soft);
 }
-.row h3, .row h4 {
+.row h3 {
   font-family: var(--font-display);
   font-size: var(--step-1);
   font-weight: 700;
@@ -655,7 +655,6 @@ button:disabled { cursor: progress; opacity: 0.7; }
 }
 .sent h3:focus { outline: none; }
 
-.js-off { display: none; }
 
 @media (max-width: 47.99rem) {
   .contact-form { grid-template-columns: minmax(0, 1fr); }
@@ -664,8 +663,7 @@ button:disabled { cursor: progress; opacity: 0.7; }
 
 @media (scripting: none) {
   .hero { grid-template-columns: minmax(0, 1fr); }
-  .hero-art, .contact-form { display: none; }
-  .js-off { display: block; }
+  .hero-art { display: none; }
 }
 
 /* 404 */

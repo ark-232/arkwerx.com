@@ -13,6 +13,7 @@
   --canary: #F5C542;
   --on-canary: #12233D;
   --error: #A3261B;
+  --hero-wash: 0.3;
 
   --font-display: "Public Sans Variable", "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-text: "Source Serif 4 Variable", "Source Serif 4", "Iowan Old Style", Georgia, serif;
@@ -42,6 +43,7 @@
     --rule-strong: #6B7C96;
     --canary: #E8BE45;
     --error: #F28B7D;
+    --hero-wash: 0.1;
   }
 }
 

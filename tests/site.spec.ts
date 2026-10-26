@@ -136,9 +136,9 @@ test('the hero frame at a given t does not depend on the frames drawn before it'
   const source = stripTypeScriptTypes(readFileSync('src/hero/scene.ts', 'utf8'));
   await page.setContent('<canvas width="960" height="640"></canvas>');
   await page.addScriptTag({ type: 'module', content: `${source}\nwindow.__seek = seek;` });
-  await page.waitForFunction(() => 'seek' in window || '__seek' in window);
+  await page.waitForFunction(() => '__seek' in window);
   const frames = await page.evaluate(() => {
-    const palette = { sheet: '#FFFFFF', desk: '#F1F4F7', ink: '#12233D', muted: '#4A5A70', form: '#2B4FA8', rule: '#8FA3BF', canary: '#F5C542', onCanary: '#12233D' };
+    const palette = { sheet: '#FFFFFF', ink: '#12233D', muted: '#4A5A70', form: '#2B4FA8', rule: '#8FA3BF', canary: '#F5C542', onCanary: '#12233D', wash: '0.3' };
     const canvas = document.querySelector('canvas')!;
     const ctx = canvas.getContext('2d')!;
     const seek = (window as unknown as { __seek: (c: CanvasRenderingContext2D, t: number, p: object, l: string) => void }).__seek;

@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import Block from '../components/Block.astro';
 import Row from '../components/Row.astro';
 import { site } from '../content/site';
+import { LIMITS, TOPICS } from '../contact-rules';
 
 const sections = [
   { id: 'selected-work', title: 'Selected work' },
@@ -13,9 +14,10 @@ const sections = [
   { id: 'education', title: 'Education' },
   { id: 'contact', title: 'Contact' },
 ];
+const section = Object.fromEntries(sections.map((s, i) => [s.id, { ...s, n: i + 1 }]));
 
 const selectedCount = site.selected.blocks.length;
-let communityIndex = 0;
+const communityStart = site.community.map((_, g) => site.community.slice(0, g).reduce((sum, group) => sum + group.rows.length, 0));
 const updated = new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(site.updated));
 const linkedin = site.profiles.find((p) => p.label === 'LinkedIn')!;
 const github = site.profiles.find((p) => p.label === 'GitHub')!;
@@ -54,7 +56,7 @@ const github = site.profiles.find((p) => p.label === 'GitHub')!;
       </section>
 
       <section id="selected-work" class="section" aria-labelledby="h-selected-work">
-        <h2 id="h-selected-work" class="section-head"><span class="n">1</span>Selected work</h2>
+        <h2 id="h-selected-work" class="section-head"><span class="n">{section["selected-work"].n}</span>{section["selected-work"].title}</h2>
         <div class="section-body">
           {site.selected.blocks.map((b, i) => <Block block={b} number={`1.${i + 1}`} />)}
           <ul class="rows">
@@ -64,21 +66,21 @@ const github = site.profiles.find((p) => p.label === 'GitHub')!;
       </section>
 
       <section id="also-building" class="section" aria-labelledby="h-also-building">
-        <h2 id="h-also-building" class="section-head"><span class="n">2</span>Also building</h2>
+        <h2 id="h-also-building" class="section-head"><span class="n">{section["also-building"].n}</span>{section["also-building"].title}</h2>
         <div class="section-body">
           {site.building.blocks.map((b, i) => <Block block={b} number={`2.${i + 1}`} />)}
         </div>
       </section>
 
       <section id="community" class="section" aria-labelledby="h-community">
-        <h2 id="h-community" class="section-head"><span class="n">3</span>Community and earlier</h2>
+        <h2 id="h-community" class="section-head"><span class="n">{section["community"].n}</span>{section["community"].title}</h2>
         <div class="section-body">
-          {site.community.map((g) => (
+          {site.community.map((g, gi) => (
             <div class="group">
               <h3 class="group-title">{g.title}</h3>
               {g.intro && <p class="section-intro">{g.intro}</p>}
               <ul class="rows">
-                {g.rows.map((r) => <Row row={r} number={`3.${++communityIndex}`} />)}
+                {g.rows.map((r, i) => <Row row={r} number={`3.${communityStart[gi] + i + 1}`} />)}
               </ul>
             </div>
           ))}
@@ -86,7 +88,7 @@ const github = site.profiles.find((p) => p.label === 'GitHub')!;
       </section>
 
       <section id="security" class="section" aria-labelledby="h-security">
-        <h2 id="h-security" class="section-head"><span class="n">4</span>Security practice</h2>
+        <h2 id="h-security" class="section-head"><span class="n">{section["security"].n}</span>{section["security"].title}</h2>
         <div class="section-body">
           <dl class="ledger">
             {site.security.map((s, i) => (
@@ -100,7 +102,7 @@ const github = site.profiles.find((p) => p.label === 'GitHub')!;
       </section>
 
       <section id="writing" class="section" aria-labelledby="h-writing">
-        <h2 id="h-writing" class="section-head"><span class="n">5</span>Writing</h2>
+        <h2 id="h-writing" class="section-head"><span class="n">{section["writing"].n}</span>{section["writing"].title}</h2>
         <div class="section-body">
           <ul class="writing">
             {site.writing.map((w) => (
@@ -117,7 +119,7 @@ const github = site.profiles.find((p) => p.label === 'GitHub')!;
       </section>
 
       <section id="education" class="section" aria-labelledby="h-education">
-        <h2 id="h-education" class="section-head"><span class="n">6</span>Education</h2>
+        <h2 id="h-education" class="section-head"><span class="n">{section["education"].n}</span>{section["education"].title}</h2>
         <div class="section-body">
           <dl class="ledger">
             {site.education.map((e, i) => (
@@ -131,32 +133,32 @@ const github = site.profiles.find((p) => p.label === 'GitHub')!;
       </section>
 
       <section id="contact" class="section" aria-labelledby="h-contact">
-        <h2 id="h-contact" class="section-head"><span class="n">7</span>Contact</h2>
+        <h2 id="h-contact" class="section-head"><span class="n">{section["contact"].n}</span>{section["contact"].title}</h2>
         <div class="section-body">
           <p class="section-intro">{site.contact.intro}</p>
-          <form class="contact-form" action="/api/contact" method="post" novalidate>
+          <form class="contact-form" action="/api/contact" method="post" novalidate hidden>
             <div class="cf">
               <label for="c-name"><span class="n" aria-hidden="true">7.1</span> Name</label>
-              <input id="c-name" name="name" type="text" autocomplete="name" maxlength="100" required aria-describedby="c-name-error" />
+              <input id="c-name" name="name" type="text" autocomplete="name" maxlength={LIMITS.name} required aria-describedby="c-name-error" />
               <p class="error" id="c-name-error"></p>
             </div>
             <div class="cf">
               <label for="c-email"><span class="n" aria-hidden="true">7.2</span> Email <span class="hint">so I can reply</span></label>
-              <input id="c-email" name="email" type="email" autocomplete="email" maxlength="254" required aria-describedby="c-email-error" />
+              <input id="c-email" name="email" type="email" autocomplete="email" maxlength={LIMITS.email} required aria-describedby="c-email-error" />
               <p class="error" id="c-email-error"></p>
             </div>
             <fieldset class="cf wide" aria-describedby="c-topic-error">
               <legend><span class="n" aria-hidden="true">7.3</span> What it is about</legend>
               <div class="choices">
-                {site.contact.topics.map((t) => (
-                  <label><input type="radio" name="topic" value={t.value} required />{t.label}</label>
+                {Object.entries(TOPICS).map(([value, label]) => (
+                  <label><input type="radio" name="topic" value={value} required />{label}</label>
                 ))}
               </div>
               <p class="error" id="c-topic-error"></p>
             </fieldset>
             <div class="cf wide">
               <label for="c-message"><span class="n" aria-hidden="true">7.4</span> Message</label>
-              <textarea id="c-message" name="message" rows="7" maxlength="4000" required aria-describedby="c-message-error"></textarea>
+              <textarea id="c-message" name="message" rows="7" maxlength={LIMITS.message} required aria-describedby="c-message-error"></textarea>
               <p class="error" id="c-message-error"></p>
             </div>
             <div class="hp" aria-hidden="true">

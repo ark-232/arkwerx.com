@@ -27,7 +27,7 @@ The Worker sends contact mail through the Email Routing `send_email` binding. Se
 npx wrangler secret put CONTACT_TO
 ```
 
-The page sets no cookies and loads nothing from other origins. Security headers live in `public/_headers`. The CSP allows only `'self'`, so scripts and styles stay in external files.
+The page sets no cookies and loads nothing from other origins. Security headers live in `public/_headers`. The CSP allows only `'self'`, so scripts and styles stay in external files. Pages carry `Cache-Control: no-transform`, which stops Cloudflare from rewriting them, and with it the Web Analytics beacon it would otherwise inject.
 
 ## Project subdomains
 

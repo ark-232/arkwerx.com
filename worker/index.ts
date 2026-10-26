@@ -1,12 +1,9 @@
+import { EMAIL, LIMITS, TOPICS, cleanName, type Topic } from '../src/contact-rules.ts';
+
 const FROM = { email: 'form@arkwerx.com', name: 'arkwerx.com contact form' };
-const TOPICS: Record<string, string> = {
-  work: 'Working together',
-  question: 'A question about my work',
-  other: 'Something else',
-};
 const MIN_ELAPSED_MS = 3000;
-const MAX_BODY_BYTES = 16_384;
-const EMAIL = /^[^\s@<>()[\]\\,;:"]+@[^\s@<>()[\]\\,;:"]+\.[A-Za-z]{2,}$/;
+// A 4,000-character message of four-byte characters, form-encoded, is about 48 KB.
+const MAX_BODY_BYTES = 65_536;
 
 declare global {
   interface Env {
@@ -15,7 +12,7 @@ declare global {
   }
 }
 
-type ContactEnv = Pick<Env, 'EMAIL' | 'CONTACT_LIMIT' | 'CONTACT_TO'>;
+type ContactEnv = Pick<Env, 'EMAIL' | 'CONTACT_LIMIT' | 'CONTACT_LIMIT_ALL' | 'CONTACT_TO'>;
 
 function json(body: object, status = 200, headers: Record<string, string> = {}) {
   return new Response(JSON.stringify(body), {
@@ -27,6 +24,11 @@ function json(body: object, status = 200, headers: Record<string, string> = {}) 
       ...headers,
     },
   });
+}
+
+// One IPv6 client usually holds a whole /64, so the limit applies to the prefix.
+export function senderKey(ip: string) {
+  return ip.includes(':') ? ip.split(':').slice(0, 4).join(':') : ip;
 }
 
 export async function contact(request: Request, env: ContactEnv): Promise<Response> {
@@ -48,30 +50,38 @@ export async function contact(request: Request, env: ContactEnv): Promise<Respon
   if (field('botcheck')) return json({ ok: true });
   if (!(Number(field('elapsed')) >= MIN_ELAPSED_MS)) return json({ ok: true });
 
-  const name = field('name').replace(/[\r\n\t]+/g, ' ').trim();
+  const name = cleanName(field('name'));
   const email = field('email').trim();
   const topic = field('topic');
   const message = field('message').replace(/\r\n?/g, '\n').trim();
 
   const invalid: string[] = [];
-  if (!name || name.length > 100) invalid.push('name');
-  if (email.length > 254 || !EMAIL.test(email)) invalid.push('email');
+  if (!name || name.length > LIMITS.name) invalid.push('name');
+  if (email.length > LIMITS.email || !EMAIL.test(email)) invalid.push('email');
   if (!Object.hasOwn(TOPICS, topic)) invalid.push('topic');
-  if (!message || message.length > 4000) invalid.push('message');
+  if (!message || message.length > LIMITS.message) invalid.push('message');
   if (invalid.length) return json({ error: 'invalid', fields: invalid }, 400);
 
-  const { success } = await env.CONTACT_LIMIT.limit({ key: request.headers.get('CF-Connecting-IP') ?? 'unknown' });
-  if (!success) return json({ error: 'rate_limited' }, 429);
+  const sender = await env.CONTACT_LIMIT.limit({ key: senderKey(request.headers.get('CF-Connecting-IP') ?? 'unknown') });
+  const everyone = await env.CONTACT_LIMIT_ALL.limit({ key: 'all' });
+  if (!sender.success || !everyone.success) return json({ error: 'rate_limited' }, 429);
 
+  const to = env.CONTACT_TO.split(',').map((s) => s.trim()).filter(Boolean);
+  if (!to.length) {
+    console.error('contact: CONTACT_TO is empty');
+    return json({ error: 'unavailable' }, 502);
+  }
   try {
     await env.EMAIL.send({
-      to: env.CONTACT_TO.split(',').map((s) => s.trim()).filter(Boolean),
+      to,
       from: FROM,
       replyTo: { email, name },
-      subject: `${TOPICS[topic]}: ${name}`,
+      subject: `${TOPICS[topic as Topic]}: ${name}`,
       text: `${message}\n\n${name} <${email}>\nSent from the contact form on arkwerx.com.`,
     });
-  } catch {
+  } catch (error) {
+    // The code names the failure; the message can quote addresses, so it stays out of the log.
+    console.error('contact: send failed', (error as { code?: string }).code ?? 'no code');
     return json({ error: 'unavailable' }, 502);
   }
   return json({ ok: true });

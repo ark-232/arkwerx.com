@@ -18,7 +18,6 @@ function run(figure: HTMLElement, canvas: HTMLCanvasElement, ctx: CanvasRenderin
   let palette = readPalette();
   let layout: Layout = 'wide';
   let t = reduce.matches ? 1 : 0;
-  let playing = false;
 
   const draw = () => seek(ctx, t, palette, layout);
 
@@ -46,10 +45,12 @@ function run(figure: HTMLElement, canvas: HTMLCanvasElement, ctx: CanvasRenderin
     draw();
   });
 
+  // Tag widths depend on the mono face, so a late font redraws whatever frame is showing.
+  document.fonts.addEventListener('loadingdone', draw);
   const fonts = Promise.race([
     document.fonts.load('500 13px "IBM Plex Mono"'),
     new Promise((resolve) => setTimeout(resolve, 1500)),
-  ]);
+  ]).catch(() => undefined);
 
   fonts.then(() => {
     const offscreen = figure.getBoundingClientRect().bottom < 0;
@@ -58,21 +59,12 @@ function run(figure: HTMLElement, canvas: HTMLCanvasElement, ctx: CanvasRenderin
       draw();
       return;
     }
-    playing = true;
     const start = performance.now();
     const tick = (now: number) => {
       t = reduce.matches ? 1 : Math.min((now - start) / DURATION, 1);
       draw();
       if (t < 1) requestAnimationFrame(tick);
-      else playing = false;
     };
     requestAnimationFrame(tick);
-  });
-
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden && playing) {
-      t = 1;
-      draw();
-    }
   });
 }

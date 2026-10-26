@@ -1,5 +1,5 @@
 ---
-import type { Site } from '../content/site';
+import { STATUSES, type Site } from '../content/site';
 
 type Block = Site['selected']['blocks'][number];
 
@@ -10,7 +10,6 @@ interface Props {
 
 const { block, number } = Astro.props;
 const id = `p-${block.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
-const STATUSES = ['Shipped', 'Open source', 'In development'] as const;
 ---
 
 <article class="item block" aria-labelledby={id}>

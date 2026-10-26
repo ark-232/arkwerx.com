@@ -1,25 +1,25 @@
 export type Palette = {
   sheet: string;
-  desk: string;
   ink: string;
   muted: string;
   form: string;
   rule: string;
   canary: string;
   onCanary: string;
+  wash: string;
 };
 
 export type Layout = 'wide' | 'tall';
 
 export const PALETTE_VARS: Record<keyof Palette, string> = {
   sheet: '--sheet',
-  desk: '--desk',
   ink: '--ink',
   muted: '--ink-2',
   form: '--form',
   rule: '--rule',
   canary: '--canary',
   onCanary: '--on-canary',
+  wash: '--hero-wash',
 };
 
 export const SIZE: Record<Layout, { w: number; h: number }> = {
@@ -63,15 +63,8 @@ const easeOut = (x: number) => 1 - (1 - x) ** 3;
 const easeInOut = (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - (-2 * x + 2) ** 3 / 2);
 
 function rgba(hex: string, a: number): string {
-  const h = hex.replace('#', '');
-  const v = parseInt(h.length === 3 ? h.replace(/./g, '$&$&') : h, 16);
+  const v = parseInt(hex.slice(1), 16);
   return `rgba(${(v >> 16) & 255}, ${(v >> 8) & 255}, ${v & 255}, ${a})`;
-}
-
-// Relative luminance without gamma: enough to tell a light sheet from a dark one.
-function lightness(hex: string): number {
-  const v = parseInt(hex.replace('#', ''), 16);
-  return (0.2126 * ((v >> 16) & 255) + 0.7152 * ((v >> 8) & 255) + 0.0722 * (v & 255)) / 255;
 }
 
 function bezier(a: Point, c1: Point, c2: Point, b: Point, u: number): Point {
@@ -126,7 +119,8 @@ function tagBox(ctx: CanvasRenderingContext2D, text: string, at: Point, pal: Pal
   ctx.restore();
 }
 
-// Draws the frame at t (0 to 1). The frame depends only on t, the palette, the layout and the caller's transform.
+// Draws the frame at t (0 to 1). The frame depends only on t, the palette, the layout, the caller's transform
+// and whether IBM Plex Mono has loaded, which sets the width of the tag text.
 export function seek(ctx: CanvasRenderingContext2D, t: number, pal: Palette, layout: Layout) {
   t = clamp01(t);
   const place = PLACE[layout];
@@ -164,10 +158,9 @@ export function seek(ctx: CanvasRenderingContext2D, t: number, pal: Palette, lay
   ctx.lineTo(title.x + title.w * titleIn, title.y + title.h);
   ctx.stroke();
 
-  // Phase 1 (0 to 0.25): trace each field box.
-  // Phase 2 (0.25 to 0.55): tag it and fill it canary.
+  // Trace each field box, then tag it and fill it canary.
   const n = FIELDS.length;
-  const fillAlpha = lightness(pal.sheet) > 0.5 ? 0.3 : 0.1;
+  const fillAlpha = Number(pal.wash);
   const tagAt = (i: number) => 0.27 + i * 0.045;
   const glideAt = (i: number) => 0.55 + i * 0.035;
   const GLIDE = 0.17;
@@ -210,7 +203,7 @@ export function seek(ctx: CanvasRenderingContext2D, t: number, pal: Palette, lay
     }
   }
 
-  // Phase 3 (0.55 to 0.9): the template tree grows and each tag glides into it, leaving a leader line.
+  // The template tree grows and each tag glides into it, leaving a leader line.
   const R = place.root;
   const treeIn = easeOut(span(t, 0.52, 0.6));
   const slot = (i: number): Point => ({ x: R.x + 34, y: R.y + 40 + i * place.step });
@@ -272,7 +265,7 @@ export function seek(ctx: CanvasRenderingContext2D, t: number, pal: Palette, lay
     tagBox(ctx, f.tag, at, pal, appear, 0.92 + 0.08 * appear);
   }
 
-  // Phase 4 (0.9 to 1): draw the signature line, then set the stamp.
+  // Draw the signature line, then set the stamp.
   const sig = { x: P.x + SIGNATURE.x, y: P.y + SIGNATURE.y };
   const line = easeInOut(span(t, 0.88, 0.95));
   if (line > 0) {

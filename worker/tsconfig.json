@@ -3,13 +3,19 @@
     "target": "es2022",
     "module": "es2022",
     "moduleResolution": "bundler",
-    "lib": ["es2024"],
+    "lib": [
+      "es2024"
+    ],
     "types": [],
     "strict": true,
     "noEmit": true,
     "skipLibCheck": true,
     "isolatedModules": true,
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "allowImportingTsExtensions": true
   },
-  "include": ["index.ts", "worker-configuration.d.ts"]
+  "include": [
+    "index.ts",
+    "worker-configuration.d.ts"
+  ]
 }

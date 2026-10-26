@@ -322,6 +322,7 @@ export const site = Site.parse({
       meta: 'Essay, with David Petzold · about 3,000 words',
       argument:
         'Argues that the Air Force Academy’s cadet development model is too centralized and risk-averse, and proposes a leadership sandbox where cadets hold real authority within set limits.',
+      link: { label: 'Read the post on LinkedIn', href: 'https://www.linkedin.com/feed/update/urn:li:activity:7449411088774758401/' },
       ledger: ['writing-05', 'writing-06', 'writing-07', 'writing-08', 'writing-09'],
     },
   ],

@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../content/site';
+---
+
+<Base title={`Page not found · ${site.name}`} description={site.description} path="/404">
+  <div class="sheet">
+    <main class="notfound">
+      <span class="label">Error 404</span>
+      <h1>Nothing is filed at this address.</h1>
+      <p><a href="/">Back to the front page</a></p>
+    </main>
+  </div>
+</Base>

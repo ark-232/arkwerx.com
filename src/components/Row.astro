@@ -1,0 +1,28 @@
+---
+import type { Site } from '../content/site';
+
+type Row = Site['selected']['rows'][number];
+
+interface Props {
+  row: Row;
+  number: string;
+}
+
+const { row, number } = Astro.props;
+---
+
+<li class="item row">
+  <span class="n hang" aria-hidden="true">{number}</span>
+  <div>
+    <h3>{row.name}</h3>
+    <p class="meta">{row.meta}</p>
+  </div>
+  <div class="text">
+    <p>{row.text}</p>
+    {row.links.length > 0 && (
+      <ul class="links">
+        {row.links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      </ul>
+    )}
+  </div>
+</li>

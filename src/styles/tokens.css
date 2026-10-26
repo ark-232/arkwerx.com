@@ -1,0 +1,54 @@
+/* The page is a ruled form: a sheet on a desk, numbered fields in a hanging gutter, labels in mono caps. */
+:root {
+  color-scheme: light dark;
+
+  --desk: #F1F4F7;
+  --sheet: #FFFFFF;
+  --ink: #12233D;
+  --ink-2: #4A5A70;
+  --form: #2B4FA8;
+  --rule: #8FA3BF;
+  --rule-soft: #D9E0EA;
+  --rule-strong: #6E819C;
+  --canary: #F5C542;
+  --on-canary: #12233D;
+  --error: #A3261B;
+
+  --font-display: "Public Sans Variable", "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-text: "Source Serif 4 Variable", "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --step--1: 0.8125rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.25rem;
+  --step-2: 1.5rem;
+  --step-3: clamp(1.625rem, 1.2rem + 1.4vw, 2.125rem);
+  --step-4: clamp(2.5rem, 1.6rem + 3.6vw, 4.5rem);
+
+  --gutter: 4.5rem;
+  --label: 10.5rem;
+  --pad: 1.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --desk: #0E1520;
+    --sheet: #16202E;
+    --ink: #DDE5EF;
+    --ink-2: #9AA8BC;
+    --form: #86A6F0;
+    --rule: #3A4A63;
+    --rule-soft: #263449;
+    --rule-strong: #6B7C96;
+    --canary: #E8BE45;
+    --error: #F28B7D;
+  }
+}
+
+@media (max-width: 47.99rem) {
+  :root {
+    --gutter: 0rem;
+    --pad: 1rem;
+    --step-0: 1.0625rem;
+  }
+}

@@ -1,0 +1,195 @@
+---
+import Base from '../layouts/Base.astro';
+import Block from '../components/Block.astro';
+import Row from '../components/Row.astro';
+import { site } from '../content/site';
+
+const sections = [
+  { id: 'selected-work', title: 'Selected work' },
+  { id: 'also-building', title: 'Also building' },
+  { id: 'community', title: 'Community and earlier' },
+  { id: 'security', title: 'Security practice' },
+  { id: 'writing', title: 'Writing' },
+  { id: 'education', title: 'Education' },
+  { id: 'contact', title: 'Contact' },
+];
+
+const selectedCount = site.selected.blocks.length;
+let communityIndex = 0;
+const updated = new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(site.updated));
+const linkedin = site.profiles.find((p) => p.label === 'LinkedIn')!;
+const github = site.profiles.find((p) => p.label === 'GitHub')!;
+---
+
+<Base title={`${site.name} · ${site.role}`} description={site.description}>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="sheet">
+    <header class="masthead">
+      <div class="who">
+        <h1>{site.name}</h1>
+        <p class="occupation">{site.role}</p>
+        <ul class="profiles">
+          {site.profiles.map((p) => <li><a href={p.href}>{p.label}</a></li>)}
+        </ul>
+      </div>
+      <nav class="index" aria-label="Sections">
+        <ol>
+          {sections.map((s, i) => (
+            <li><a href={`#${s.id}`}><span class="n">{i + 1}</span><span>{s.title}</span></a></li>
+          ))}
+        </ol>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero" aria-label="Summary">
+        <div class="hero-text">
+          <p class="lead">{site.hero.lead}</p>
+          <p class="follow">{site.hero.follow}</p>
+        </div>
+        <figure class="hero-art">
+          <canvas aria-hidden="true"></canvas>
+          <figcaption>Fig. 1. A form, traced, tagged and mapped to a template.</figcaption>
+        </figure>
+      </section>
+
+      <section id="selected-work" class="section" aria-labelledby="h-selected-work">
+        <h2 id="h-selected-work" class="section-head"><span class="n">1</span>Selected work</h2>
+        <div class="section-body">
+          {site.selected.blocks.map((b, i) => <Block block={b} number={`1.${i + 1}`} />)}
+          <ul class="rows">
+            {site.selected.rows.map((r, i) => <Row row={r} number={`1.${selectedCount + i + 1}`} />)}
+          </ul>
+        </div>
+      </section>
+
+      <section id="also-building" class="section" aria-labelledby="h-also-building">
+        <h2 id="h-also-building" class="section-head"><span class="n">2</span>Also building</h2>
+        <div class="section-body">
+          {site.building.blocks.map((b, i) => <Block block={b} number={`2.${i + 1}`} />)}
+        </div>
+      </section>
+
+      <section id="community" class="section" aria-labelledby="h-community">
+        <h2 id="h-community" class="section-head"><span class="n">3</span>Community and earlier</h2>
+        <div class="section-body">
+          {site.community.map((g) => (
+            <div class="group">
+              <h3 class="group-title">{g.title}</h3>
+              {g.intro && <p class="section-intro">{g.intro}</p>}
+              <ul class="rows">
+                {g.rows.map((r) => <Row row={r} number={`3.${++communityIndex}`} />)}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section id="security" class="section" aria-labelledby="h-security">
+        <h2 id="h-security" class="section-head"><span class="n">4</span>Security practice</h2>
+        <div class="section-body">
+          <dl class="ledger">
+            {site.security.map((s, i) => (
+              <div class="item">
+                <dt><span class="n hang" aria-hidden="true">4.{i + 1}</span>{s.label}</dt>
+                <dd>{s.text}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </section>
+
+      <section id="writing" class="section" aria-labelledby="h-writing">
+        <h2 id="h-writing" class="section-head"><span class="n">5</span>Writing</h2>
+        <div class="section-body">
+          <ul class="writing">
+            {site.writing.map((w) => (
+              <li class="item">
+                <time class="n hang date" datetime={w.date}>{w.date}</time>
+                <h3>{w.title}</h3>
+                <p class="meta">{w.meta}</p>
+                <p class="argument">{w.argument}</p>
+                {w.link && <p class="links"><a href={w.link.href}>{w.link.label}</a></p>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section id="education" class="section" aria-labelledby="h-education">
+        <h2 id="h-education" class="section-head"><span class="n">6</span>Education</h2>
+        <div class="section-body">
+          <dl class="ledger">
+            {site.education.map((e, i) => (
+              <div class="item">
+                <dt><span class="n hang" aria-hidden="true">6.{i + 1}</span>{e.credential}</dt>
+                <dd class="sub">{e.detail}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </section>
+
+      <section id="contact" class="section" aria-labelledby="h-contact">
+        <h2 id="h-contact" class="section-head"><span class="n">7</span>Contact</h2>
+        <div class="section-body">
+          <p class="section-intro">{site.contact.intro}</p>
+          <form class="contact-form" action="/api/contact" method="post" novalidate>
+            <div class="cf">
+              <label for="c-name"><span class="n" aria-hidden="true">7.1</span> Name</label>
+              <input id="c-name" name="name" type="text" autocomplete="name" maxlength="100" required aria-describedby="c-name-error" />
+              <p class="error" id="c-name-error"></p>
+            </div>
+            <div class="cf">
+              <label for="c-email"><span class="n" aria-hidden="true">7.2</span> Email <span class="hint">so I can reply</span></label>
+              <input id="c-email" name="email" type="email" autocomplete="email" maxlength="254" required aria-describedby="c-email-error" />
+              <p class="error" id="c-email-error"></p>
+            </div>
+            <fieldset class="cf wide" aria-describedby="c-topic-error">
+              <legend><span class="n" aria-hidden="true">7.3</span> What it is about</legend>
+              <div class="choices">
+                {site.contact.topics.map((t) => (
+                  <label><input type="radio" name="topic" value={t.value} required />{t.label}</label>
+                ))}
+              </div>
+              <p class="error" id="c-topic-error"></p>
+            </fieldset>
+            <div class="cf wide">
+              <label for="c-message"><span class="n" aria-hidden="true">7.4</span> Message</label>
+              <textarea id="c-message" name="message" rows="7" maxlength="4000" required aria-describedby="c-message-error"></textarea>
+              <p class="error" id="c-message-error"></p>
+            </div>
+            <div class="hp" aria-hidden="true">
+              <label for="c-botcheck">Leave this field empty</label>
+              <input id="c-botcheck" name="botcheck" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+            <div class="actions">
+              <p class="form-status" role="status" aria-live="polite"></p>
+              <button type="submit">Send message</button>
+            </div>
+          </form>
+          <div class="sent" id="contact-sent" hidden>
+            <h3 tabindex="-1">Message sent</h3>
+            <p>Thanks. I will reply to the address you gave.</p>
+          </div>
+          <p class="js-off">
+            The form needs JavaScript. You can also reach me on <a href={linkedin.href}>LinkedIn</a> or <a href={github.href}>GitHub</a>.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="colophon">
+      <p>
+        Set in Public Sans, Source Serif 4 and IBM Plex Mono. Built with Astro and served by Cloudflare. No cookies, analytics or third-party
+        scripts. <a href={site.source.href}>{site.source.label}</a>.
+      </p>
+      <p class="date">Updated <time datetime={site.updated}>{updated}</time></p>
+    </footer>
+  </div>
+
+  <script>
+    import '../hero/drive';
+    import '../scripts/contact';
+  </script>
+</Base>

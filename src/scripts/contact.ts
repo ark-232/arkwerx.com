@@ -3,7 +3,7 @@ import { EMAIL, LIMITS, cleanName } from '../contact-rules';
 const FIELD_ERRORS: Record<string, string> = {
   name: 'Enter your name.',
   email: 'Enter an email address I can reply to.',
-  topic: 'Pick what it is about.',
+  topic: 'Pick a topic.',
   message: 'Write a message.',
 };
 const TOO_LONG = 'Keep it under 4,000 characters.';

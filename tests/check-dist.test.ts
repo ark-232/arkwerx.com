@@ -25,10 +25,12 @@ const caught: [string, string][] = [
 ];
 
 const clean = [
-  'More than 50,000 Air Force users have made about 97,000 documents.',
-  'Version 2.0 launched in September 2023; bench tests logged frames at 1090 MHz.',
-  '1 Selected work 2 Also building 3 Community and earlier',
-  'From 2021 to 2025 the team won in 2023 and 2025.',
+  'Airmark · 50,000+ Air Force users',
+  'Sites for a council of 47,000+ junior officers.',
+  'Sole developer of Penpal, live since August 2026.',
+  'April 2026. 21-page spec, typeset in Typst.',
+  'npm i @quillmark/quillify',
+  'U.S. Air Force Academy, 2025',
 ];
 
 for (const [label, body] of caught) {

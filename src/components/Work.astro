@@ -1,8 +1,7 @@
 ---
 import Tile from './Tile.astro';
-import { site } from '../content/site';
+import { site, slug } from '../content/site';
 
-// Each pair of tiles enters its own way: the first rises, the second wipes up, the last rises again.
 const reveals = ['rv-rise', 'rv-rise', 'rv-wipe', 'rv-wipe', 'rv-rise', 'rv-rise'];
 ---
 
@@ -14,27 +13,20 @@ const reveals = ['rv-rise', 'rv-rise', 'rv-wipe', 'rv-wipe', 'rv-rise', 'rv-rise
     </ul>
     <h3 class="also-h">Also</h3>
     <ul class="also">
-      {site.also.map((row) => (
-        <li class="rv rv-left">
-          {row.link ? (
-            <a class="row" href={row.link.href}>
+      {site.also.map((row) => {
+        const Row = row.link ? 'a' : 'div';
+        return (
+          <li class="rv rv-left">
+            <Row class="row" href={row.link?.href}>
               <span class="row-n">{row.name}</span>
               <span class="row-l">{row.line}</span>
               <span class="row-r">{row.role}</span>
-              <span class={`chip is-${row.status.toLowerCase().replace(/ /g, '-')}`}>{row.status}</span>
-              <svg class="ic row-go" aria-hidden="true"><use href="#i-out"></use></svg>
-            </a>
-          ) : (
-            <div class="row">
-              <span class="row-n">{row.name}</span>
-              <span class="row-l">{row.line}</span>
-              <span class="row-r">{row.role}</span>
-              <span class={`chip is-${row.status.toLowerCase().replace(/ /g, '-')}`}>{row.status}</span>
-              <span class="row-go"></span>
-            </div>
-          )}
-        </li>
-      ))}
+              <span class={`chip is-${slug(row.status)}`}>{row.status}</span>
+              {row.link ? <svg class="ic row-go" aria-hidden="true"><use href="#i-out"></use></svg> : <span class="row-go"></span>}
+            </Row>
+          </li>
+        );
+      })}
     </ul>
   </div>
 </section>

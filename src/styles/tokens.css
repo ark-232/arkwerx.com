@@ -17,7 +17,6 @@
   --ink-3: #9AA3AF;
   --accent: #FF5A1F;
   --accent-ink: #FF7A45;
-  --accent-soft: rgb(255 90 31 / 0.14);
   --shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 24px 60px -24px rgb(0 0 0 / 0.7), 0 8px 20px -12px rgb(0 0 0 / 0.5);
 
   --display: "Bricolage Grotesque Variable", "Arial Narrow", "Helvetica Neue", system-ui, sans-serif;
@@ -43,7 +42,6 @@
     --ink-2: #434A54;
     --ink-3: #59616C;
     --accent-ink: #B5380A;
-    --accent-soft: rgb(255 90 31 / 0.12);
     --shadow: 0 1px 2px rgb(20 25 35 / 0.06), 0 24px 50px -28px rgb(20 25 35 / 0.35);
   }
 }

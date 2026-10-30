@@ -16,7 +16,6 @@ const { loop, sizes, eager = false } = Astro.props;
   <Picture image={loop.poster} sizes={sizes} eager={eager} />
   <video
     src={`/media/${loop.video}`}
-    poster={`/media/${loop.poster.src}.avif`}
     width={loop.poster.width}
     height={loop.poster.height}
     muted

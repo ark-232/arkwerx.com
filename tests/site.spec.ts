@@ -73,7 +73,7 @@ test.describe('contact form', () => {
     await page.getByRole('button', SEND).click();
     await expect(page.locator('#c-name-error')).toHaveText('Enter your name.');
     await expect(page.locator('#c-email-error')).toHaveText('Enter an email address I can reply to.');
-    await expect(page.locator('#c-topic-error')).toHaveText('Pick what it is about.');
+    await expect(page.locator('#c-topic-error')).toHaveText('Pick a topic.');
     await expect(page.locator('#c-message-error')).toHaveText('Write a message.');
     await expect(page.getByLabel('Name')).toBeFocused();
     expect(posted).toBe(false);

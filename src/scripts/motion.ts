@@ -32,7 +32,12 @@ for (const box of document.querySelectorAll<HTMLElement>('.loop')) {
     const on = wanted();
     button.dataset.state = on ? 'playing' : 'paused';
     button.setAttribute('aria-label', `${on ? 'Pause' : 'Play'} the ${button.dataset.label} loop`);
-    if (on) video.play().catch(() => {});
+    // A refused play (Low Power Mode, data saver) leaves the loop paused and the button saying Play.
+    if (on) video.play().catch((e: DOMException) => {
+      if (e.name !== 'NotAllowedError') return;
+      choice = false;
+      sync();
+    });
     else video.pause();
   };
   video.addEventListener('playing', () => video.classList.add('on'), { once: true });
@@ -49,7 +54,7 @@ for (const box of document.querySelectorAll<HTMLElement>('.loop')) {
   button.hidden = false;
 }
 
-// The real figures are in the HTML; the count runs from the first figure of the same width, so nothing shifts.
+// The real figures are in the HTML; the count runs from 80% of the figure, the same width, so nothing shifts.
 if (!reduce.matches) {
   const counter = new IntersectionObserver(
     (entries) => {
@@ -58,7 +63,7 @@ if (!reduce.matches) {
         counter.unobserve(e.target);
         const el = e.target as HTMLElement;
         const to = Number(el.dataset.to);
-        const from = 10 ** (String(to).length - 1);
+        const from = Math.round(to * 0.8);
         const start = performance.now();
         const step = (now: number) => {
           const p = Math.min(1, (now - start) / 1400);
@@ -71,10 +76,14 @@ if (!reduce.matches) {
     },
     { threshold: 1 },
   );
-  for (const el of document.querySelectorAll('.count')) counter.observe(el);
+  for (const el of document.querySelectorAll('.count:not(.hero .count)')) counter.observe(el);
+  // The hero figure waits until the window has settled, so the count is not read half-covered.
+  const settled = document.querySelector('.window')?.getAnimations().map((a) => a.finished) ?? [];
+  Promise.allSettled(settled).then(() => {
+    for (const el of document.querySelectorAll('.hero .count')) counter.observe(el);
+  });
 }
 
-// A spotlight follows fine pointers along the tile borders.
 if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
   for (const tile of document.querySelectorAll<HTMLElement>('.tile')) {
     tile.addEventListener('pointermove', (e) => {

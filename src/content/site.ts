@@ -85,10 +85,10 @@ const airmarkLoop = {
 };
 
 export const site = Site.parse({
-  name: 'Enrique Oti',
+  name: 'Enrique O.',
   role: 'Senior software engineer and cybersecurity professional',
   description:
-    'Enrique Oti, senior software engineer and cybersecurity professional. Document engines, accredited web apps and native Apple software.',
+    'Enrique O., senior software engineer and cybersecurity professional. Document engines, accredited web apps and native Apple software.',
   hero: {
     line: 'I ship secure software, from typesetting engines to Apple TV.',
     loop: airmarkLoop,

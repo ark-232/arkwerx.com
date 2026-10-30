@@ -275,6 +275,7 @@ export const site = Site.parse({
       line: 'An Apple TV dashboard with a Mac menu bar companion.',
       role: 'Solo',
       status: 'In development',
+      link: { label: 'GitHub', href: 'https://github.com/ark-232/northlight' },
       ledger: ['own-07', 'own-08', 'own-09', 'own-10', 'own-11', 'own-12'],
     },
     {

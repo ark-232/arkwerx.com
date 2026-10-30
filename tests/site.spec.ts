@@ -1,9 +1,8 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
-import { readFileSync } from 'node:fs';
-import { stripTypeScriptTypes } from 'node:module';
 
-const HEADINGS = ['Selected work', 'Also building', 'Community and earlier', 'Security practice', 'Writing', 'Education', 'Contact'];
+const HEADINGS = ['Work', 'Writing', 'Education', 'Stack', 'Have a project or a question? Write.'];
+const SEND = { name: 'Send' };
 
 async function fillValid(page: Page) {
   await page.getByLabel('Name').fill('Ada Lovelace');
@@ -48,8 +47,10 @@ test('reads in full with JavaScript off', async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   await page.goto('/');
-  for (const name of HEADINGS) await expect(page.getByRole('heading', { level: 2, name })).toBeVisible();
-  await expect(page.locator('.hero-art')).toBeHidden();
+  await expect(page.getByRole('heading', { level: 1, name: 'Enrique Oti IV' })).toBeVisible();
+  for (const name of HEADINGS) await expect(page.getByRole('heading', { level: 2, name, exact: true })).toBeVisible();
+  await expect(page.getByAltText(/^Airmark memo editor/)).toBeVisible();
+  await expect(page.locator('.loop-toggle').first()).toBeHidden();
   await expect(page.locator('form.contact-form')).toBeHidden();
   await expect(page.getByText('The form needs JavaScript.')).toBeVisible();
   await context.close();
@@ -69,7 +70,7 @@ test.describe('contact form', () => {
       return route.fulfill({ json: { ok: true } });
     });
     await page.goto('/');
-    await page.getByRole('button', { name: 'Send message' }).click();
+    await page.getByRole('button', SEND).click();
     await expect(page.locator('#c-name-error')).toHaveText('Enter your name.');
     await expect(page.locator('#c-email-error')).toHaveText('Enter an email address I can reply to.');
     await expect(page.locator('#c-topic-error')).toHaveText('Pick what it is about.');
@@ -86,8 +87,8 @@ test.describe('contact form', () => {
     });
     await page.goto('/');
     await fillValid(page);
-    await page.getByRole('button', { name: 'Send message' }).click();
-    await expect(page.getByRole('heading', { name: 'Message sent' })).toBeFocused();
+    await page.getByRole('button', SEND).click();
+    await expect(page.getByRole('heading', { name: 'Thanks. It’s in my inbox.' })).toBeFocused();
     await expect(page.locator('form.contact-form')).toBeHidden();
     const sent = new URLSearchParams(body);
     expect(sent.get('topic')).toBe('question');
@@ -98,14 +99,14 @@ test.describe('contact form', () => {
     await page.goto('/');
     await fillValid(page);
     await page.route('**/api/contact', (route) => route.fulfill({ status: 429, json: { error: 'rate_limited' } }));
-    await page.getByRole('button', { name: 'Send message' }).click();
+    await page.getByRole('button', SEND).click();
     await expect(page.getByRole('status')).toContainText('Too many messages');
     await page.unroute('**/api/contact');
     await page.route('**/api/contact', (route) => route.abort());
-    await page.getByRole('button', { name: 'Send message' }).click();
-    await expect(page.getByRole('status')).toContainText('did not send');
+    await page.getByRole('button', SEND).click();
+    await expect(page.getByRole('status')).toContainText('Try again.');
     await expect(page.getByLabel('Message')).toHaveValue('Does quillify read XFA forms?');
-    await expect(page.getByRole('button', { name: 'Send message' })).toBeEnabled();
+    await expect(page.getByRole('button', SEND)).toBeEnabled();
   });
 
   test('treats a filled honeypot as sent without posting', async ({ page }) => {
@@ -117,8 +118,8 @@ test.describe('contact form', () => {
     await page.goto('/');
     await fillValid(page);
     await page.locator('#c-botcheck').fill('bot', { force: true });
-    await page.getByRole('button', { name: 'Send message' }).click();
-    await expect(page.getByRole('heading', { name: 'Message sent' })).toBeVisible();
+    await page.getByRole('button', SEND).click();
+    await expect(page.getByRole('heading', { name: 'Thanks. It’s in my inbox.' })).toBeVisible();
     expect(posted).toBe(false);
   });
 });
@@ -132,27 +133,22 @@ test('the local Worker accepts a same-origin message and refuses a cross-origin 
   expect(forbidden.status()).toBe(403);
 });
 
-test('the hero frame at a given t does not depend on the frames drawn before it', async ({ page }) => {
-  const source = stripTypeScriptTypes(readFileSync('src/hero/scene.ts', 'utf8'));
-  await page.setContent('<canvas width="960" height="640"></canvas>');
-  await page.addScriptTag({ type: 'module', content: `${source}\nwindow.__seek = seek;` });
-  await page.waitForFunction(() => '__seek' in window);
-  const frames = await page.evaluate(() => {
-    const palette = { sheet: '#FFFFFF', ink: '#12233D', muted: '#4A5A70', form: '#2B4FA8', rule: '#8FA3BF', canary: '#F5C542', onCanary: '#12233D', wash: '0.3' };
-    const canvas = document.querySelector('canvas')!;
-    const ctx = canvas.getContext('2d')!;
-    const seek = (window as unknown as { __seek: (c: CanvasRenderingContext2D, t: number, p: object, l: string) => void }).__seek;
-    const at = (t: number) => {
-      seek(ctx, t, palette, 'wide');
-      return canvas.toDataURL();
-    };
-    const cold = at(0.62);
-    for (let t = 0; t <= 1; t += 0.05) at(t);
-    const afterForward = at(0.62);
-    for (let t = 1; t >= 0; t -= 0.05) at(t);
-    const afterBackward = at(0.62);
-    return { cold, afterForward, afterBackward };
-  });
-  expect(frames.afterForward).toBe(frames.cold);
-  expect(frames.afterBackward).toBe(frames.cold);
+test('the hero loop plays in view and pauses on request', async ({ page }) => {
+  await page.goto('/');
+  const button = page.getByRole('button', { name: 'Pause the Airmark loop' });
+  await expect(button).toBeVisible();
+  const video = page.locator('.hero video');
+  await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.paused)).toBe(false);
+  await button.click();
+  await expect(page.getByRole('button', { name: 'Play the Airmark loop' })).toBeVisible();
+  expect(await video.evaluate((v: HTMLVideoElement) => v.paused)).toBe(true);
+});
+
+test('leaves the loops paused under reduced motion', async ({ browser }) => {
+  const context = await browser.newContext({ reducedMotion: 'reduce' });
+  const page = await context.newPage();
+  await page.goto('/');
+  await expect(page.getByRole('button', { name: 'Play the Airmark loop' })).toBeVisible();
+  expect(await page.locator('.hero video').evaluate((v: HTMLVideoElement) => v.paused)).toBe(true);
+  await context.close();
 });

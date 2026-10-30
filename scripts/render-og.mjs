@@ -4,6 +4,5 @@ import { chromium } from '@playwright/test';
 const browser = await chromium.launch();
 const page = await browser.newPage({ bypassCSP: true, viewport: { width: 1200, height: 630 }, colorScheme: 'light', reducedMotion: 'reduce' });
 await page.goto('http://127.0.0.1:8788/', { waitUntil: 'networkidle' });
-await page.addStyleTag({ content: '.sheet { margin: 0 !important; border-top: 0 !important; }' });
 await page.screenshot({ path: 'public/og.png', clip: { x: 0, y: 0, width: 1200, height: 630 } });
 await browser.close();

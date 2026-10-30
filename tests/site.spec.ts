@@ -47,7 +47,7 @@ test('reads in full with JavaScript off', async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   await page.goto('/');
-  await expect(page.getByRole('heading', { level: 1, name: 'Enrique Oti IV' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: 'Enrique Oti' })).toBeVisible();
   for (const name of HEADINGS) await expect(page.getByRole('heading', { level: 2, name, exact: true })).toBeVisible();
   await expect(page.getByAltText(/^Airmark memo editor/)).toBeVisible();
   await expect(page.locator('.loop-toggle').first()).toBeHidden();

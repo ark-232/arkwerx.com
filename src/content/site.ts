@@ -85,10 +85,10 @@ const airmarkLoop = {
 };
 
 export const site = Site.parse({
-  name: 'Enrique Oti IV',
+  name: 'Enrique Oti',
   role: 'Senior software engineer and cybersecurity professional',
   description:
-    'Enrique Oti IV, senior software engineer and cybersecurity professional. Document engines, accredited web apps and native Apple software.',
+    'Enrique Oti, senior software engineer and cybersecurity professional. Document engines, accredited web apps and native Apple software.',
   hero: {
     line: 'I ship secure software, from typesetting engines to Apple TV.',
     loop: airmarkLoop,
@@ -286,13 +286,6 @@ export const site = Site.parse({
   ],
 
   writing: [
-    {
-      date: '2026-04',
-      title: 'PNGres: A Primate-Addressable Persistence Layer',
-      text: '21-page spec, typeset in Typst.',
-      link: { label: 'Read the PDF', href: 'https://github.com/ark-232/pngres/blob/main/docs/tech-specs.pdf' },
-      ledger: ['writing-01', 'writing-02', 'writing-03', 'writing-04'],
-    },
     {
       date: '2026-04',
       title: 'Reforming the Long Blue Line',

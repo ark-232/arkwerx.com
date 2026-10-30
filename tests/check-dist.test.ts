@@ -28,7 +28,6 @@ const clean = [
   'Airmark · 50,000+ Air Force users',
   'Sites for a council of 47,000+ junior officers.',
   'Sole developer of Penpal, live since August 2026.',
-  'April 2026. 21-page spec, typeset in Typst.',
   'npm i @quillmark/quillify',
   'U.S. Air Force Academy, 2025',
 ];

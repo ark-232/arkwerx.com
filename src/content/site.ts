@@ -115,11 +115,11 @@ export const site = Site.parse({
       media: [{
         kind: 'image',
         image: {
-          src: 'airmark-app',
+          src: 'airmark-editor-preview',
           widths: [800, 1600],
           width: 800,
-          height: 450,
-          alt: 'Airmark: document sidebar, memo editor and the live typeset preview.',
+          height: 549,
+          alt: 'Airmark: structured memo fields on the left, the typeset memo on the right.',
         },
       }],
       sites: [],
@@ -315,6 +315,8 @@ export const site = Site.parse({
 
   contact: { line: 'Have a project or a question? Write.' },
 });
+
+export const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 
 export type Site = z.infer<typeof Site>;
 export type Tile = Site['work'][number];

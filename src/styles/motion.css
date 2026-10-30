@@ -33,7 +33,7 @@
     .stack-chips li:nth-child(3n) { animation-range: entry 30% cover 40%; }
     .rv-open { animation-name: rv-open; animation-range: entry 0% cover 30%; }
     .rv-rule { animation: none; }
-    .rv-rule::before { animation: rv-rule var(--ease) both; animation-duration: auto; animation-timeline: --rule; animation-range: entry 0% cover 45%; }
+    .rv-rule::before { animation: rv-rule var(--ease) both; animation-duration: auto; animation-timeline: --rule; animation-range: entry 0% entry 100%; }
   }
 
   .io .field { transition: clip-path 0.6s var(--ease); }

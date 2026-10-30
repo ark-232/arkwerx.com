@@ -59,7 +59,6 @@
   border-radius: 10px;
   box-shadow: var(--shadow);
 }
-.t-fletch .loop-toggle { top: 0.6rem; bottom: auto; }
 
 .phones { display: flex; justify-content: center; gap: clamp(0.75rem, 3vw, 1.25rem); width: 100%; padding-top: 0.5rem; }
 .phone {
@@ -114,10 +113,9 @@
 
 .sites { margin-top: 0.2rem; }
 .sites li { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); align-items: center; column-gap: 0.75rem; border-top: 1px solid var(--line); }
-.sites .chip { grid-column: 1; margin-bottom: 0.7rem; justify-self: start; }
 .sites .lnk { padding: 0; border: 0; font-size: 0.9375rem; font-weight: 620; }
 .sites .lnk:hover { color: var(--accent-ink); }
-.sites span:not(.chip) { font-size: 0.9375rem; color: var(--ink-2); }
+.sites .site-t { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0.6rem; font-size: 0.9375rem; color: var(--ink-2); }
 
 /* Text-led tiles: the name carries the tile, the facts sit at its foot. */
 .tile.is-text .body { padding: 1.4rem 1.3rem 1.3rem; }
@@ -127,6 +125,8 @@
 
 @media (hover: hover) and (pointer: fine) {
   .tile:hover::after { opacity: 1; }
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   .tile:hover .frame img, .tile:hover .phone img { transform: scale(1.025); }
 }
 
@@ -151,6 +151,15 @@
 a.row:hover .row-n { color: var(--accent-ink); }
 a.row:hover .row-go { color: var(--accent-ink); transform: translate(2px, -2px); }
 
+/* The large frame shows only the right half of its image (Airmark's typeset memo), so it does not repeat the hero window. */
+.tile.large .frame img { width: 202%; max-width: none; margin-left: -102%; }
+
+/* Below 64em the inset would be too small to read. */
+@media (max-width: 63.99em) {
+  .frame.inset { display: none; }
+  .tile.large .frame { aspect-ratio: 16 / 10; }
+}
+
 @media (min-width: 40em) {
   .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .tile.large { grid-column: span 2; }
@@ -163,10 +172,12 @@ a.row:hover .row-go { color: var(--accent-ink); transform: translate(2px, -2px);
   .bento .t-fletch, .bento .t-pngres { grid-column: span 3; }
   .tile.large > article { flex-direction: row-reverse; }
   .tile.large .media { flex: 1.5; padding: 1.5rem 0 0 1.5rem; border-bottom: 0; border-left: 1px solid var(--line); }
-  .tile.large .frame { align-self: stretch; border-right: 0; border-radius: 10px 0 0 0; }
-  .tile.large .frame img { height: 100%; object-fit: cover; object-position: 72% top; }
+  .tile.large .frame { position: relative; align-self: stretch; min-height: 22rem; border-right: 0; border-radius: 10px 0 0 0; }
+  .tile.large .frame img { position: absolute; top: 0; right: 0; margin: 0; }
   .tile.large .body { flex: 1; padding: 1.5rem; }
-  .tile.large .phones { justify-content: flex-start; padding-right: 1.5rem; }
+  .tile.large .phones { align-self: stretch; justify-content: flex-start; padding-right: 1.5rem; }
+  .tile.large .phone img { height: 100%; aspect-ratio: auto; }
+  .frame.inset { left: 0.875rem; right: auto; width: 44%; }
   .tile.large .top h3 { font-size: 2.5rem; }
   .row { grid-template-columns: 15rem minmax(0, 1fr) 11rem 8.5rem 20px; grid-template-areas: "n l r s g"; }
 }

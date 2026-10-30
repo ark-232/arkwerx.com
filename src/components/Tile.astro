@@ -2,7 +2,7 @@
 import Counted from './Counted.astro';
 import Loop from './Loop.astro';
 import Picture from './Picture.astro';
-import type { Tile } from '../content/site';
+import { slug, type Tile } from '../content/site';
 
 interface Props {
   tile: Tile;
@@ -10,8 +10,8 @@ interface Props {
 }
 
 const { tile, reveal } = Astro.props;
-const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-const sizes = tile.size === 'large' ? '(min-width: 64em) 40rem, 92vw' : '(min-width: 64em) 38rem, 92vw';
+// The large frame shows the right half of its image at twice the width (work.css).
+const sizes = tile.size === 'large' ? '(min-width: 64em) 64rem, 184vw' : '(min-width: 64em) 38rem, 92vw';
 ---
 
 <li class:list={['tile', tile.size, `t-${tile.id}`, 'rv', reveal, { 'is-text': !tile.media.length }]}>
@@ -41,7 +41,7 @@ const sizes = tile.size === 'large' ? '(min-width: 64em) 40rem, 92vw' : '(min-wi
       <p class="line"><Counted text={tile.line} /></p>
       <p class="proof">
         <svg class="ic" aria-hidden="true"><use href="#i-check"></use></svg>
-        <span>{tile.proof.map((p, i) => <><span class:list={{ seg: tile.proof.length > 1 }}><Counted text={p} /></span>{i < tile.proof.length - 1 && ' · '}</>)}</span>
+        <span>{tile.proof.map((p, i) => <>{i > 0 && ' '}<span class:list={{ seg: tile.proof.length > 1 }}>{i > 0 && '· '}<Counted text={p} /></span></>)}</span>
       </p>
       {tile.command && <p class="cmd"><code>{tile.command}</code></p>}
       <p class="meta">{tile.role}{tile.credit && <>. {tile.credit}</>}</p>
@@ -51,8 +51,7 @@ const sizes = tile.size === 'large' ? '(min-width: 64em) 40rem, 92vw' : '(min-wi
           {tile.sites.map((s) => (
             <li>
               <a class="lnk" href={s.link.href}>{s.link.label}<svg class="ic" aria-hidden="true"><use href="#i-out"></use></svg></a>
-              <span>{s.text}</span>
-              {s.status && <span class="chip is-in-development">{s.status}</span>}
+              <span class="site-t">{s.text}{s.status && <>{' '}<span class={`chip is-${slug(s.status)}`}>{s.status}</span></>}</span>
             </li>
           ))}
         </ul>

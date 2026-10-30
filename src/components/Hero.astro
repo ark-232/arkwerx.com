@@ -1,0 +1,45 @@
+---
+import Counted from './Counted.astro';
+import Loop from './Loop.astro';
+import { site } from '../content/site';
+
+const [first, ...rest] = site.name.split(' ');
+const nav = [
+  { href: '#work', label: 'Work' },
+  { href: '#writing', label: 'Writing' },
+  { href: '#contact', label: 'Contact' },
+];
+const icons: Record<string, string> = { GitHub: '#i-gh', LinkedIn: '#i-in' };
+---
+
+<header class="hero" id="top">
+  <div class="field" aria-hidden="true"></div>
+  <nav class="nav wrap" aria-label="Sections">
+    <a class="mark" href="#top" aria-label={`${site.name}, back to top`}>EO</a>
+    <ul>
+      {nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+    </ul>
+  </nav>
+  <div class="hero-in wrap">
+    <h1 class="name"><span class="ln">{first}</span> <span class="ln">{rest.join(' ')}</span></h1>
+    <div class="hero-copy">
+      <p class="role">{site.role}</p>
+      <p class="lede">{site.hero.line}</p>
+      <div class="acts">
+        <a class="pill" href="#contact">Write</a>
+        <a class="go" href="#work">Work<span class="go-dot"><svg class="ic" aria-hidden="true"><use href="#i-down"></use></svg></span></a>
+        <ul class="socials">
+          {site.profiles.map((p) => (
+            <li><a class="icon-btn" href={p.href} aria-label={p.label}><svg class="ic solid" aria-hidden="true"><use href={icons[p.label]}></use></svg></a></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+    <figure class="stage">
+      <div class="window">
+        <Loop loop={site.hero.loop} sizes="(min-width: 64em) 44vw, 92vw" eager />
+      </div>
+      <figcaption class="proofline"><Counted text={site.hero.proof} /></figcaption>
+    </figure>
+  </div>
+</header>

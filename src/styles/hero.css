@@ -1,0 +1,170 @@
+/* Hero: a full-bleed orange field, a poster-scale name, and the product window hanging over the field's lower edge. */
+.hero {
+  position: relative;
+  isolation: isolate;
+  container-type: inline-size;
+  color: var(--on-signal);
+}
+.hero :focus-visible { outline-color: var(--on-signal); }
+
+.field {
+  --win: calc(100cqw - 2 * var(--gut));
+  --tail: calc(var(--win) * 0.6875 * 0.4 + 2.5rem);
+  position: absolute;
+  inset: 0 0 var(--tail) 0;
+  z-index: -1;
+  background: var(--signal);
+  clip-path: inset(0px 0px 0px 0px round 0px);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 3.75rem;
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.mark {
+  display: inline-flex;
+  align-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  font: 800 1.4rem/1 var(--display);
+  font-stretch: 75%;
+  letter-spacing: 0.01em;
+}
+.nav ul { display: flex; gap: 0.1rem; margin-right: -0.5rem; }
+.nav li a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: 0.55rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 560;
+  transition: background-color 0.2s var(--ease);
+}
+.nav li a:hover { background: rgb(20 10 5 / 0.1); }
+
+.hero-in { display: grid; padding-top: 0.75rem; }
+
+.name {
+  font: 790 clamp(3.4rem, 21cqw, 7.5rem)/0.9 var(--display);
+  font-stretch: 75%;
+  letter-spacing: -0.004em;
+  margin-left: -0.03em;
+}
+.name .ln { display: block; white-space: nowrap; }
+
+.role {
+  margin-top: 0.85rem;
+  max-width: 24ch;
+  font-size: clamp(1.125rem, 4.8cqw, 1.5rem);
+  font-weight: 620;
+  line-height: 1.22;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+.lede {
+  margin-top: 0.5rem;
+  max-width: 32ch;
+  font-size: clamp(1rem, 4.2cqw, 1.125rem);
+  line-height: 1.45;
+  color: var(--on-signal-2);
+  text-wrap: pretty;
+}
+
+.acts { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; margin-top: 1.1rem; }
+.pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding-inline: 1.5rem;
+  border-radius: 999px;
+  background: var(--on-signal);
+  color: #FFF4EC;
+  font-weight: 600;
+  transition: transform 0.25s var(--ease);
+}
+.pill:hover { transform: translateY(-1px); }
+.pill:active { transform: scale(0.97); }
+.go { display: inline-flex; align-items: center; gap: 0.55rem; min-height: 48px; font-weight: 600; }
+.go-dot {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  transition: background-color 0.25s var(--ease), color 0.25s var(--ease), transform 0.35s var(--ease);
+}
+.go-dot .ic { width: 20px; height: 20px; }
+.go:hover .go-dot { background: var(--on-signal); color: var(--signal); transform: translateY(3px); }
+.socials { display: flex; margin-left: auto; margin-right: -0.5rem; }
+.icon-btn { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; transition: background-color 0.2s; }
+.icon-btn:hover { background: rgb(20 10 5 / 0.1); }
+.icon-btn .ic { width: 20px; height: 20px; }
+
+.stage { margin-top: 1.5rem; }
+.window {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #16181C;
+  box-shadow: 0 2px 4px rgb(60 20 0 / 0.14), 0 30px 60px -24px rgb(40 12 0 / 0.55);
+  outline: 1px solid rgb(20 10 5 / 0.18);
+  outline-offset: -1px;
+}
+.proofline { margin-top: 0.75rem; min-height: 1.75rem; font-size: 0.875rem; line-height: 1.75rem; color: var(--ink-3); }
+.proofline .count { color: var(--ink); font-weight: 600; }
+
+/* Product loops, here and in the tiles. */
+.loop { position: relative; }
+.loop img { width: 100%; }
+.loop video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.4s; }
+.loop video.on { opacity: 1; }
+.loop-toggle {
+  position: absolute;
+  right: 0.6rem;
+  bottom: 0.6rem;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid rgb(255 255 255 / 0.18);
+  border-radius: 50%;
+  background: rgb(14 17 22 / 0.82);
+  color: #FFFFFF;
+  cursor: pointer;
+}
+.loop-toggle .ic { width: 18px; height: 18px; }
+.loop-toggle:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+.loop-toggle[data-state="playing"] .i-play, .loop-toggle:not([data-state="playing"]) .i-pause { display: none; }
+
+@media (max-width: 21.25rem) {
+  .nav li a { padding-inline: 0.4rem; font-size: 0.8125rem; }
+}
+
+@media (min-width: 64em) {
+  .field {
+    --win: min(46cqw, 44rem);
+    --tail: calc(var(--win) * 0.6875 * 0.36 + 2.5rem);
+  }
+  .nav { min-height: 4.5rem; }
+  .nav li a { font-size: 0.9375rem; padding-inline: 0.9rem; }
+  .hero-in {
+    grid-template-columns: minmax(0, 1fr) min(46cqw, 44rem);
+    column-gap: 3rem;
+    padding-top: 1.5rem;
+  }
+  .name { grid-column: 1 / -1; font-size: min(17.2cqw, 16rem); line-height: 0.86; }
+  .name .ln { display: inline; }
+  .hero-copy { align-self: start; padding-top: 2.25rem; }
+  .role { margin-top: 0; font-size: 1.625rem; }
+  .lede { font-size: 1.1875rem; }
+  .acts { margin-top: 1.75rem; }
+  .socials { margin-left: 0.25rem; }
+  .stage { margin-top: 2.25rem; }
+}

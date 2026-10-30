@@ -1,197 +1,121 @@
 ---
 import Base from '../layouts/Base.astro';
-import Block from '../components/Block.astro';
-import Row from '../components/Row.astro';
+import Hero from '../components/Hero.astro';
+import Sprite from '../components/Sprite.astro';
+import Work from '../components/Work.astro';
 import { site } from '../content/site';
 import { LIMITS, TOPICS } from '../contact-rules';
+import '../styles/hero.css';
+import '../styles/work.css';
+import '../styles/sections.css';
+import '../styles/motion.css';
 
-const sections = [
-  { id: 'selected-work', title: 'Selected work' },
-  { id: 'also-building', title: 'Also building' },
-  { id: 'community', title: 'Community and earlier' },
-  { id: 'security', title: 'Security practice' },
-  { id: 'writing', title: 'Writing' },
-  { id: 'education', title: 'Education' },
-  { id: 'contact', title: 'Contact' },
-];
-const section = Object.fromEntries(sections.map((s, i) => [s.id, { ...s, n: i + 1 }]));
-
-const selectedCount = site.selected.blocks.length;
-const communityStart = site.community.map((_, g) => site.community.slice(0, g).reduce((sum, group) => sum + group.rows.length, 0));
-const updated = new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(site.updated));
+const month = (date: string) => new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(date));
 const linkedin = site.profiles.find((p) => p.label === 'LinkedIn')!;
 const github = site.profiles.find((p) => p.label === 'GitHub')!;
+const ask = site.contact.line.split(' ').at(-1)!;
+const lead = site.contact.line.slice(0, -ask.length);
 ---
 
-<Base title={`${site.name} · ${site.role}`} description={site.description}>
-  <a class="skip" href="#main">Skip to content</a>
-  <div class="sheet">
-    <header class="masthead">
-      <div class="who">
-        <h1>{site.name}</h1>
-        <p class="occupation">{site.role}</p>
-        <ul class="profiles">
-          {site.profiles.map((p) => <li><a href={p.href}>{p.label}</a></li>)}
+<Base title={`${site.name} · Senior software engineer`} description={site.description}>
+  <Sprite />
+  <a class="skip" href="#work">Skip to work</a>
+  <Hero />
+
+  <main id="main">
+    <Work />
+
+    <section id="writing" class="writing wrap" aria-labelledby="writing-h">
+      <h2 id="writing-h" class="h2">Writing</h2>
+      <ul class="wr-list">
+        {site.writing.map((w) => (
+          <li class="rv rv-rule">
+            <a class="wr" href={w.link.href}>
+              <span class="wr-t">{w.title}</span>
+              <span class="wr-d"><time datetime={w.date}>{month(w.date)}</time>{w.with && `, with ${w.with}`}. {w.text}</span>
+              <span class="wr-go">{w.link.label}<svg class="ic" aria-hidden="true"><use href="#i-out"></use></svg></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="about wrap" aria-labelledby="edu-h">
+      <div>
+        <h2 id="edu-h" class="h2">Education</h2>
+        <ul class="edu">
+          {site.education.map((e) => (
+            <li class="rv rv-rise"><b>{e.credential}</b>{e.detail && <span>{e.detail}</span>}</li>
+          ))}
         </ul>
       </div>
-      <nav class="index" aria-label="Sections">
-        <ol>
-          {sections.map((s, i) => (
-            <li><a href={`#${s.id}`}><span class="n">{i + 1}</span><span>{s.title}</span></a></li>
-          ))}
-        </ol>
-      </nav>
-    </header>
+      <div>
+        <h2 class="h2">Stack</h2>
+        <ul class="stack-chips">
+          {site.stack.items.map((s) => <li class="rv rv-pop">{s}</li>)}
+        </ul>
+      </div>
+    </section>
 
-    <main id="main">
-      <section class="hero" aria-label="Summary">
-        <div class="hero-text">
-          <p class="lead">{site.hero.lead}</p>
-          <p class="follow">{site.hero.follow}</p>
-        </div>
-        <figure class="hero-art">
-          <canvas aria-hidden="true"></canvas>
-          <figcaption>Fig. 1. A form, traced, tagged and mapped to a template.</figcaption>
-        </figure>
-      </section>
-
-      <section id="selected-work" class="section" aria-labelledby="h-selected-work">
-        <h2 id="h-selected-work" class="section-head"><span class="n">{section["selected-work"].n}</span>{section["selected-work"].title}</h2>
-        <div class="section-body">
-          {site.selected.blocks.map((b, i) => <Block block={b} number={`1.${i + 1}`} />)}
-          <ul class="rows">
-            {site.selected.rows.map((r, i) => <Row row={r} number={`1.${selectedCount + i + 1}`} />)}
-          </ul>
-        </div>
-      </section>
-
-      <section id="also-building" class="section" aria-labelledby="h-also-building">
-        <h2 id="h-also-building" class="section-head"><span class="n">{section["also-building"].n}</span>{section["also-building"].title}</h2>
-        <div class="section-body">
-          {site.building.blocks.map((b, i) => <Block block={b} number={`2.${i + 1}`} />)}
-        </div>
-      </section>
-
-      <section id="community" class="section" aria-labelledby="h-community">
-        <h2 id="h-community" class="section-head"><span class="n">{section["community"].n}</span>{section["community"].title}</h2>
-        <div class="section-body">
-          {site.community.map((g, gi) => (
-            <div class="group">
-              <h3 class="group-title">{g.title}</h3>
-              {g.intro && <p class="section-intro">{g.intro}</p>}
-              <ul class="rows">
-                {g.rows.map((r, i) => <Row row={r} number={`3.${communityStart[gi] + i + 1}`} />)}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section id="security" class="section" aria-labelledby="h-security">
-        <h2 id="h-security" class="section-head"><span class="n">{section["security"].n}</span>{section["security"].title}</h2>
-        <div class="section-body">
-          <dl class="ledger">
-            {site.security.map((s, i) => (
-              <div class="item">
-                <dt><span class="n hang" aria-hidden="true">4.{i + 1}</span>{s.label}</dt>
-                <dd>{s.text}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      </section>
-
-      <section id="writing" class="section" aria-labelledby="h-writing">
-        <h2 id="h-writing" class="section-head"><span class="n">{section["writing"].n}</span>{section["writing"].title}</h2>
-        <div class="section-body">
-          <ul class="writing">
-            {site.writing.map((w) => (
-              <li class="item">
-                <time class="n hang date" datetime={w.date}>{w.date}</time>
-                <h3>{w.title}</h3>
-                <p class="meta">{w.meta}</p>
-                <p class="argument">{w.argument}</p>
-                {w.link && <p class="links"><a href={w.link.href}>{w.link.label}</a></p>}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      <section id="education" class="section" aria-labelledby="h-education">
-        <h2 id="h-education" class="section-head"><span class="n">{section["education"].n}</span>{section["education"].title}</h2>
-        <div class="section-body">
-          <dl class="ledger">
-            {site.education.map((e, i) => (
-              <div class="item">
-                <dt><span class="n hang" aria-hidden="true">6.{i + 1}</span>{e.credential}</dt>
-                <dd class="sub">{e.detail}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      </section>
-
-      <section id="contact" class="section" aria-labelledby="h-contact">
-        <h2 id="h-contact" class="section-head"><span class="n">{section["contact"].n}</span>{section["contact"].title}</h2>
-        <div class="section-body">
-          <p class="section-intro">{site.contact.intro}</p>
-          <form class="contact-form" action="/api/contact" method="post" novalidate hidden>
-            <div class="cf">
-              <label for="c-name"><span class="n" aria-hidden="true">7.1</span> Name</label>
+    <section id="contact" class="contact" aria-labelledby="contact-h">
+      <div class="ct-card rv rv-open">
+        <h2 id="contact-h" class="ct-h">{lead}<span>{ask}</span></h2>
+        <form class="contact-form" action="/api/contact" method="post" novalidate hidden>
+          <div class="f2">
+            <div class="fld">
+              <label for="c-name">Name</label>
               <input id="c-name" name="name" type="text" autocomplete="name" maxlength={LIMITS.name} required aria-describedby="c-name-error" />
               <p class="error" id="c-name-error"></p>
             </div>
-            <div class="cf">
-              <label for="c-email"><span class="n" aria-hidden="true">7.2</span> Email <span class="hint">so I can reply</span></label>
+            <div class="fld">
+              <label for="c-email">Email</label>
               <input id="c-email" name="email" type="email" autocomplete="email" maxlength={LIMITS.email} required aria-describedby="c-email-error" />
               <p class="error" id="c-email-error"></p>
             </div>
-            <fieldset class="cf wide" aria-describedby="c-topic-error">
-              <legend><span class="n" aria-hidden="true">7.3</span> What it is about</legend>
-              <div class="choices">
-                {Object.entries(TOPICS).map(([value, label]) => (
-                  <label><input type="radio" name="topic" value={value} required />{label}</label>
-                ))}
-              </div>
-              <p class="error" id="c-topic-error"></p>
-            </fieldset>
-            <div class="cf wide">
-              <label for="c-message"><span class="n" aria-hidden="true">7.4</span> Message</label>
-              <textarea id="c-message" name="message" rows="7" maxlength={LIMITS.message} required aria-describedby="c-message-error"></textarea>
-              <p class="error" id="c-message-error"></p>
-            </div>
-            <div class="hp" aria-hidden="true">
-              <label for="c-botcheck">Leave this field empty</label>
-              <input id="c-botcheck" name="botcheck" type="text" tabindex="-1" autocomplete="off" />
-            </div>
-            <div class="actions">
-              <p class="form-status" role="status" aria-live="polite"></p>
-              <button type="submit">Send message</button>
-            </div>
-          </form>
-          <div class="sent" id="contact-sent" hidden>
-            <h3 tabindex="-1">Message sent</h3>
-            <p>Thanks. I will reply to the address you gave.</p>
           </div>
-          <p class="js-off">
-            The form needs JavaScript. You can also reach me on <a href={linkedin.href}>LinkedIn</a> or <a href={github.href}>GitHub</a>.
-          </p>
+          <fieldset class="fld topic" aria-describedby="c-topic-error">
+            <legend>Topic</legend>
+            <div class="choices">
+              {Object.entries(TOPICS).map(([value, label]) => (
+                <label class="rad"><input type="radio" name="topic" value={value} required /><span>{label}</span></label>
+              ))}
+            </div>
+            <p class="error" id="c-topic-error"></p>
+          </fieldset>
+          <div class="fld">
+            <label for="c-message">Message</label>
+            <textarea id="c-message" name="message" rows="5" maxlength={LIMITS.message} required aria-describedby="c-message-error"></textarea>
+            <p class="error" id="c-message-error"></p>
+          </div>
+          <div class="hp" aria-hidden="true">
+            <label for="c-botcheck">Leave this field empty</label>
+            <input id="c-botcheck" name="botcheck" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+          <div class="send-row">
+            <button class="send" type="submit">Send</button>
+            <p class="form-status" role="status" aria-live="polite"></p>
+          </div>
+        </form>
+        <div class="sent" id="contact-sent" hidden>
+          <h3 tabindex="-1">Thanks. It’s in my inbox.</h3>
         </div>
-      </section>
-    </main>
+        <p class="js-off">
+          The form needs JavaScript. You can also reach me on <a href={linkedin.href}>LinkedIn</a> or <a href={github.href}>GitHub</a>.
+        </p>
+      </div>
+    </section>
+  </main>
 
-    <footer class="colophon">
-      <p>
-        Set in Public Sans, Source Serif 4 and IBM Plex Mono. Built with Astro and served by Cloudflare. No cookies, analytics or third-party
-        scripts. <a href={site.source.href}>{site.source.label}</a>.
-      </p>
-      <p class="date">Updated <time datetime={site.updated}>{updated}</time></p>
-    </footer>
-  </div>
+  <footer class="foot wrap">
+    <a class="mark" href="#top" aria-label={`${site.name}, back to top`}>EO</a>
+    <ul>
+      {site.profiles.map((p) => <li><a href={p.href}>{p.label}</a></li>)}
+      <li><a href={site.source.href}>{site.source.label}</a></li>
+    </ul>
+  </footer>
 
   <script>
-    import '../hero/drive';
+    import '../scripts/motion';
     import '../scripts/contact';
   </script>
 </Base>

@@ -12,9 +12,9 @@
     "deploy": "npm run build && npm run check:dist && npm run validate && npm test && WRANGLER_SEND_METRICS=false wrangler deploy"
   },
   "dependencies": {
-    "@fontsource-variable/public-sans": "5.3.0",
-    "@fontsource-variable/source-serif-4": "5.3.1",
-    "@fontsource/ibm-plex-mono": "5.3.0",
+    "@fontsource-variable/bricolage-grotesque": "5.3.0",
+    "@fontsource-variable/geist": "5.3.0",
+    "@fontsource-variable/geist-mono": "5.3.0",
     "astro": "7.3.8"
   },
   "devDependencies": {

@@ -1,0 +1,66 @@
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  overflow-x: clip;
+  scroll-behavior: smooth;
+  scrollbar-color: var(--s2) var(--bg);
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 1rem/1.55 var(--sans);
+  font-feature-settings: "ss01";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+  accent-color: var(--accent);
+}
+
+::selection { background: var(--signal); color: var(--on-signal); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+
+[hidden] { display: none !important; }
+img, video { display: block; max-width: 100%; height: auto; }
+picture { display: contents; }
+a { color: inherit; text-decoration: none; }
+h1, h2, h3, p, ul, ol, dl, dd, figure { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+button, input, textarea { font: inherit; color: inherit; }
+code, .mono { font-family: var(--mono); font-size: 0.875em; font-feature-settings: normal; }
+
+.wrap { width: min(100% - 2 * var(--gut), var(--max)); margin-inline: auto; }
+.sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+.ic { width: 1em; height: 1em; flex: none; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+.ic.solid { fill: currentColor; stroke: none; }
+
+.skip {
+  position: absolute; left: 0.75rem; top: -4rem; z-index: 50;
+  padding: 0.7rem 1rem; border-radius: 10px;
+  background: var(--on-signal); color: #FFF4EC; font-weight: 600;
+}
+.skip:focus { top: 0.75rem; }
+
+.h2 {
+  font: 780 clamp(2.75rem, 12vw, 5rem)/0.92 var(--display);
+  font-stretch: 75%;
+  letter-spacing: -0.008em;
+  text-wrap: balance;
+}
+
+.count { font-variant-numeric: tabular-nums; }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  min-height: 1.6rem; padding: 0.1rem 0.6rem; border-radius: 999px;
+  border: 1px solid var(--line-2);
+  font-size: 0.75rem; font-weight: 550; line-height: 1.2; color: var(--ink-2); white-space: nowrap;
+}
+.chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--ink-3); }
+.chip.is-shipped::before { background: var(--accent); }
+.chip.is-in-development::before, .chip.is-prototype::before { background: transparent; box-shadow: inset 0 0 0 1.5px var(--ink-3); }
+
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }

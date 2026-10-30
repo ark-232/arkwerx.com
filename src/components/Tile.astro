@@ -1,0 +1,69 @@
+---
+import Counted from './Counted.astro';
+import Loop from './Loop.astro';
+import Picture from './Picture.astro';
+import type { Tile } from '../content/site';
+
+interface Props {
+  tile: Tile;
+  reveal: string;
+}
+
+const { tile, reveal } = Astro.props;
+const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+const sizes = tile.size === 'large' ? '(min-width: 64em) 40rem, 92vw' : '(min-width: 64em) 38rem, 92vw';
+---
+
+<li class:list={['tile', tile.size, `t-${tile.id}`, 'rv', reveal, { 'is-text': !tile.media.length }]}>
+  <article aria-labelledby={`t-${tile.id}`}>
+    {tile.media.length > 0 && (
+      <div class="media">
+        {tile.media.map((m, i) =>
+          m.kind === 'loop' ? (
+            <div class="frame"><Loop loop={m.loop} sizes={sizes} /></div>
+          ) : m.kind === 'image' ? (
+            <div class:list={['frame', { inset: i > 0 }]}><Picture image={m.image} sizes={i > 0 ? '(min-width: 64em) 18rem, 50vw' : sizes} /></div>
+          ) : (
+            <div class="phones">
+              {m.images.map((image, p) => (
+                <div class={`phone rv ${p ? 'rv-right' : 'rv-left'}`}><Picture image={image} sizes="(min-width: 64em) 13rem, 40vw" /></div>
+              ))}
+            </div>
+          ),
+        )}
+      </div>
+    )}
+    <div class="body">
+      <div class="top">
+        <h3 id={`t-${tile.id}`}>{tile.name}</h3>
+        <ul class="chips">{tile.status.map((s) => <li class={`chip is-${slug(s)}`}>{s}</li>)}</ul>
+      </div>
+      <p class="line"><Counted text={tile.line} /></p>
+      <p class="proof">
+        <svg class="ic" aria-hidden="true"><use href="#i-check"></use></svg>
+        <span>{tile.proof.map((p, i) => <><span class:list={{ seg: tile.proof.length > 1 }}><Counted text={p} /></span>{i < tile.proof.length - 1 && ' · '}</>)}</span>
+      </p>
+      {tile.command && <p class="cmd"><code>{tile.command}</code></p>}
+      <p class="meta">{tile.role}{tile.credit && <>. {tile.credit}</>}</p>
+      <p class="stack mono">{tile.stack.join(' · ')}</p>
+      {tile.sites.length > 0 && (
+        <ul class="sites">
+          {tile.sites.map((s) => (
+            <li>
+              <a class="lnk" href={s.link.href}>{s.link.label}<svg class="ic" aria-hidden="true"><use href="#i-out"></use></svg></a>
+              <span>{s.text}</span>
+              {s.status && <span class="chip is-in-development">{s.status}</span>}
+            </li>
+          ))}
+        </ul>
+      )}
+      {tile.links.length > 0 && (
+        <ul class="links">
+          {tile.links.map((l) => (
+            <li><a class="lnk" href={l.href}>{l.label}<svg class="ic" aria-hidden="true"><use href="#i-out"></use></svg></a></li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </article>
+</li>

@@ -1,0 +1,31 @@
+---
+import Picture from './Picture.astro';
+import type { Loop } from '../content/site';
+
+interface Props {
+  loop: Loop;
+  sizes: string;
+  eager?: boolean;
+}
+
+// The picture is the poster and the no-JS view; the video fades in over it once it plays, and the button pauses it.
+const { loop, sizes, eager = false } = Astro.props;
+---
+
+<div class="loop">
+  <Picture image={loop.poster} sizes={sizes} eager={eager} />
+  <video
+    src={`/media/${loop.video}`}
+    poster={`/media/${loop.poster.src}.avif`}
+    width={loop.poster.width}
+    height={loop.poster.height}
+    muted
+    loop
+    playsinline
+    preload="none"
+    aria-hidden="true"></video>
+  <button class="loop-toggle" type="button" data-label={loop.label} aria-label={`Play the ${loop.label} loop`} hidden>
+    <svg class="ic solid i-play" aria-hidden="true"><use href="#i-play"></use></svg>
+    <svg class="ic solid i-pause" aria-hidden="true"><use href="#i-pause"></use></svg>
+  </button>
+</div>

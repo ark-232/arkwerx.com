@@ -7,7 +7,7 @@ const FIELD_ERRORS: Record<string, string> = {
   message: 'Write a message.',
 };
 const TOO_LONG = 'Keep it under 4,000 characters.';
-const FAILED = 'Your message did not send. Your text is still here, so try again in a minute, or reach me on LinkedIn.';
+const FAILED = 'That didn’t send. Try again.';
 const LIMITED = 'Too many messages from your connection just now. Wait a minute and send it again.';
 
 type Problem = { name: string; message: string };

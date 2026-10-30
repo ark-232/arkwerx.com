@@ -1,0 +1,28 @@
+---
+import type { Image } from '../content/site';
+
+interface Props {
+  image: Image;
+  sizes: string;
+  eager?: boolean;
+}
+
+const { image, sizes, eager = false } = Astro.props;
+const file = (ext: string, w?: number) => `/media/${image.src}${w ? `-${w}` : ''}.${ext}`;
+const set = (ext: string) => (image.widths.length ? image.widths.map((w) => `${file(ext, w)} ${w}w`).join(', ') : file(ext));
+const sized = image.widths.length ? sizes : undefined;
+---
+
+<picture>
+  <source type="image/avif" srcset={set('avif')} sizes={sized} />
+  <source type="image/webp" srcset={set('webp')} sizes={sized} />
+  <img
+    src={file('webp', image.widths[0])}
+    width={image.width}
+    height={image.height}
+    alt={image.alt}
+    loading={eager ? 'eager' : 'lazy'}
+    decoding="async"
+    fetchpriority={eager ? 'high' : undefined}
+  />
+</picture>

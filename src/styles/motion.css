@@ -1,0 +1,56 @@
+/* Motion differs by section. Scroll-driven where supported; the script adds .io and .in elsewhere. Reduced motion gets none. */
+@keyframes settle { from { transform: translateY(10px); } }
+@keyframes window-in { from { transform: perspective(1400px) rotateX(16deg) translateY(40px); } }
+@keyframes tighten { to { clip-path: inset(10px 10px 10px 10px round 28px); } }
+@keyframes rv-rise { from { opacity: 0; transform: translateY(40px); } }
+@keyframes rv-wipe {
+  from { clip-path: inset(100% -1px -1px -1px round calc(var(--r) + 1px)); transform: translateY(24px); }
+  to { clip-path: inset(-1px -1px -1px -1px round calc(var(--r) + 1px)); }
+}
+@keyframes rv-left { from { opacity: 0; transform: translateX(-32px); } }
+@keyframes rv-right { from { opacity: 0; transform: translateX(32px); } }
+@keyframes rv-pop { from { opacity: 0; transform: scale(0.55); } }
+@keyframes rv-rule { from { transform: scaleX(0); } }
+@keyframes rv-open {
+  from { clip-path: inset(0 8% 0 8% round 64px); }
+  to { clip-path: inset(-1px -1px -1px -1px round 29px); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .role { animation: settle 0.45s var(--ease) both; }
+  .lede { animation: settle 0.45s var(--ease) 0.06s both; }
+  .acts { animation: settle 0.45s var(--ease) 0.12s both; }
+  .window { transform-origin: 50% 100%; animation: window-in 1s var(--ease) 0.08s both; }
+
+  @supports (animation-timeline: view()) {
+    .field { animation: tighten linear both; animation-duration: auto; animation-timeline: scroll(root); animation-range: 0 60vh; }
+    .rv { animation: rv-rise var(--ease) both; animation-duration: auto; animation-timeline: view(); animation-range: entry 0% entry 85%; }
+    .rv-wipe { animation-name: rv-wipe; animation-range: entry 0% cover 35%; }
+    .rv-left { animation-name: rv-left; }
+    .rv-right { animation-name: rv-right; }
+    .rv-pop { animation-name: rv-pop; animation-timing-function: var(--spring); animation-range: entry 0% entry 100%; }
+    .stack-chips li:nth-child(3n + 2) { animation-range: entry 15% cover 30%; }
+    .stack-chips li:nth-child(3n) { animation-range: entry 30% cover 40%; }
+    .rv-open { animation-name: rv-open; animation-range: entry 0% cover 30%; }
+    .rv-rule { animation: none; }
+    .rv-rule::before { animation: rv-rule var(--ease) both; animation-duration: auto; animation-timeline: --rule; animation-range: entry 0% cover 45%; }
+  }
+
+  .io .field { transition: clip-path 0.6s var(--ease); }
+  .io.folded .field { clip-path: inset(10px 10px 10px 10px round 28px); }
+  .io .rv { transition: opacity 0.7s var(--ease), transform 0.8s var(--ease), clip-path 0.9s var(--ease); }
+  .io .rv-rise:not(.in) { opacity: 0; transform: translateY(40px); }
+  .io .rv-wipe { clip-path: inset(-1px -1px -1px -1px round calc(var(--r) + 1px)); }
+  .io .rv-wipe:not(.in) { clip-path: inset(100% -1px -1px -1px round calc(var(--r) + 1px)); transform: translateY(24px); }
+  .io .rv-left:not(.in) { opacity: 0; transform: translateX(-32px); }
+  .io .rv-right:not(.in) { opacity: 0; transform: translateX(32px); }
+  .io .phone { transition-delay: 0.15s; }
+  .io .rv-pop { transition-timing-function: var(--spring); transition-duration: 0.9s; }
+  .io .rv-pop:not(.in) { opacity: 0; transform: scale(0.55); }
+  .io .stack-chips li:nth-child(3n + 2) { transition-delay: 0.06s; }
+  .io .stack-chips li:nth-child(3n) { transition-delay: 0.12s; }
+  .io .rv-rule::before { transition: transform 1s var(--ease); }
+  .io .rv-rule:not(.in)::before { transform: scaleX(0); }
+  .io .rv-open { clip-path: inset(-1px -1px -1px -1px round 29px); }
+  .io .rv-open:not(.in) { clip-path: inset(0 8% 0 8% round 64px); }
+}

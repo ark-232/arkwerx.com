@@ -1,0 +1,10 @@
+---
+// Renders text with its first thousands figure (50,000) wrapped so the script can count up to it.
+interface Props {
+  text: string;
+}
+
+const [before, figure, after] = Astro.props.text.split(/(\d{1,3}(?:,\d{3})+)/);
+---
+
+{before}{figure && <span class="count" data-to={figure.replaceAll(',', '')}>{figure}</span>}{after}

@@ -1,12 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
-import { site } from '../content/site';
-import '../styles/sections.css';
+import '../styles/pages.css';
 ---
 
-<Base title={`Page not found · ${site.name}`} description={site.description} path="/404">
-  <main class="notfound">
-    <h1>Nothing is filed at this address.</h1>
-    <p><a href="/">Back to the front page</a></p>
-  </main>
+<Base title="Not found" path="/404">
+  <div class="notfound wrap">
+    <h1 class="display">Nothing is filed at this address.</h1>
+    <p><a href="/">Return to the front page</a></p>
+  </div>
 </Base>

@@ -49,7 +49,7 @@ test('sends a valid message to every recipient with reply-to set to the sender',
     to: ['first@example.com', 'second@example.com'],
     from: { email: 'form@arkwerx.com', name: 'arkwerx.com contact form' },
     replyTo: { email: 'ada@example.com', name: 'Ada Lovelace' },
-    subject: 'A question about my work: Ada Lovelace',
+    subject: 'A question about a project: Ada Lovelace',
     text: 'Does quillify read XFA forms?\n\nAda Lovelace <ada@example.com>\nSent from the contact form on arkwerx.com.',
   });
 });
@@ -90,7 +90,7 @@ test('turns control characters and line separators in the name into spaces', asy
     const { env, sent } = fakeEnv();
     await contact(post({ ...valid, name }), env);
     const message = sent[0] as { subject: string; replyTo: { name: string } };
-    assert.equal(message.subject, 'A question about my work: Ada Bcc: someone@example.com');
+    assert.equal(message.subject, 'A question about a project: Ada Bcc: someone@example.com');
     assert.ok(!/[\p{Cc}\p{Zl}\p{Zp}]/u.test(message.replyTo.name));
   }
 });

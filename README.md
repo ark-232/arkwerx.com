@@ -1,6 +1,6 @@
 # arkwerx.com
 
-Source for [arkwerx.com](https://arkwerx.com), the site of Enrique Oti IV. Astro builds the page to static files, and one Cloudflare Worker serves them and handles the contact form.
+Source for [arkwerx.com](https://arkwerx.com), the site of ArkWerx. Astro builds the pages to static files, and one Cloudflare Worker serves them and handles the contact form.
 
 ## Develop
 
@@ -32,3 +32,7 @@ The page sets no cookies and loads nothing from other origins. Security headers 
 ## Project subdomains
 
 Each project gets its own Worker, with a custom domain `<name>.arkwerx.com`. The repo name matches the subdomain. There are no wildcard records, and the custom domain comes off before a Worker is deleted.
+
+## Brand assets
+
+The seal, wordmark, favicons, `og.png` and the Spectral fonts in `public/` come from the ArkWerx brand kit, which is kept outside this repo. The fonts are Latin subsets (SIL Open Font License) made with `pyftsubset --layout-features='*' --flavor=woff2`. Spectral SC needs every layout feature kept, or its small caps fall back to lowercase.

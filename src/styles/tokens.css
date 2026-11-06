@@ -1,47 +1,25 @@
-/* Orange field with dark ink at the top and bottom; a dark ground in between, light under prefers-color-scheme: light. */
+/* ArkWerx brand v1: bone paper, navy ink, oxblood accent, slate secondary. One light theme. */
+@font-face { font-family: "Spectral SC"; src: url("/fonts/SpectralSC-Medium.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "Spectral"; src: url("/fonts/Spectral-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Spectral"; src: url("/fonts/Spectral-Italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Spectral"; src: url("/fonts/Spectral-Medium.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  --signal: #FF5A1F;
-  --on-signal: #140A05;
-  --on-signal-2: #3B1A0C;
-  --on-signal-line: rgb(20 10 5 / 0.72);
+  --bone: #F4F1EA;
+  --mat: #EAE5DA;
+  --navy: #1C2A3B;
+  --ox: #7B1E24;
+  --slate: #3A3F47;
+  --rule: rgb(28 42 59 / 0.16);
+  --rule-2: rgb(28 42 59 / 0.32);
 
-  --bg: #0E1116;
-  --s1: #151920;
-  --s2: #1D222B;
-  --line: rgb(240 244 250 / 0.09);
-  --line-2: rgb(240 244 250 / 0.16);
-  --ink: #F3F5F8;
-  --ink-2: #BCC3CD;
-  --ink-3: #9AA3AF;
-  --accent: #FF5A1F;
-  --accent-ink: #FF7A45;
-  --shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 24px 60px -24px rgb(0 0 0 / 0.7), 0 8px 20px -12px rgb(0 0 0 / 0.5);
-
-  --display: "Bricolage Grotesque Variable", "Arial Narrow", "Helvetica Neue", system-ui, sans-serif;
-  --sans: "Geist Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --mono: "Geist Mono Variable", ui-monospace, "SF Mono", Menlo, monospace;
+  --caps: "Spectral SC", Georgia, "Times New Roman", serif;
+  --serif: "Spectral", Georgia, "Times New Roman", serif;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
 
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --spring: linear(0, 0.009, 0.035 2.1%, 0.141 4.4%, 0.723 12.9%, 0.938 16.7%, 1.017 19.4%, 1.067, 1.099 24.3%, 1.108 26%, 1.103, 1.085 30.7%, 1.007 38.9%, 0.985 43%, 0.981 45.1%, 0.983 48.8%, 1.002 59.7%, 1);
-  --gut: clamp(1rem, 4.4vw, 2.5rem);
-  --max: 82rem;
-  --r: 18px;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color-scheme: light;
-    --bg: #F6F7F9;
-    --s1: #FFFFFF;
-    --s2: #EDEFF3;
-    --line: rgb(15 20 30 / 0.09);
-    --line-2: rgb(15 20 30 / 0.16);
-    --ink: #12151A;
-    --ink-2: #434A54;
-    --ink-3: #59616C;
-    --accent-ink: #B5380A;
-    --shadow: 0 1px 2px rgb(20 25 35 / 0.06), 0 24px 50px -28px rgb(20 25 35 / 0.35);
-  }
+  --gut: clamp(1.25rem, 5vw, 3rem);
+  --max: 72rem;
 }

@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import ProjectIndex from '../components/ProjectIndex.astro';
+import { site } from '../content/site';
+import '../styles/pages.css';
+import '../styles/projects.css';
+---
+
+<Base title="Projects" path="/projects">
+  <div class="page wrap">
+    <h1 class="display">Projects</h1>
+
+    <section aria-labelledby="works-h">
+      <h2 id="works-h" class="label"><span>I</span> Works</h2>
+      <div class="cols" aria-hidden="true"><span>No.</span><span>Work</span><span>Kind</span><span>Year</span><span>Status</span></div>
+      <ProjectIndex projects={site.works} start={1} />
+    </section>
+
+    <section aria-labelledby="collab-h">
+      <h2 id="collab-h" class="label"><span>II</span> Collaborations</h2>
+      <div class="cols" aria-hidden="true"><span>No.</span><span>Work</span><span>Kind</span><span>Year</span><span>Status</span></div>
+      <ProjectIndex projects={site.collaborations} start={site.works.length + 1} />
+      <p class="disclaimer">{site.disclaimer}</p>
+    </section>
+  </div>
+
+  <script>
+    import '../scripts/motion';
+  </script>
+</Base>

@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../content/site';
+import '../styles/pages.css';
+---
+
+<Base title="Members" path="/members">
+  <div class="page wrap">
+    <h1 class="display">Members</h1>
+    <ul class="members">
+      {site.members.map((m) => (
+        <li class="member rv">
+          <h2>{m.name}</h2>
+          <p class="title">{m.title}</p>
+          <p class="bio">{m.bio}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <script>
+    import '../scripts/motion';
+  </script>
+</Base>

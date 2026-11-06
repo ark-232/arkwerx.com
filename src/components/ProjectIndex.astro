@@ -1,0 +1,68 @@
+---
+import Loop from './Loop.astro';
+import Picture from './Picture.astro';
+import type { Project } from '../content/site';
+
+interface Props {
+  projects: Project[];
+  start: number;
+}
+
+const { projects, start } = Astro.props;
+const roman = (n: number) => {
+  let out = '';
+  for (const [r, v] of [['X', 10], ['IX', 9], ['V', 5], ['IV', 4], ['I', 1]] as const) {
+    while (n >= v) { out += r; n -= v; }
+  }
+  return out;
+};
+const sizes = '(min-width: 60em) 36rem, 92vw';
+---
+
+<ol class="index">
+  {projects.map((p, i) => (
+    <li class="rv">
+      <details id={p.id}>
+        <summary>
+          <span class="no">{String(start + i).padStart(2, '0')}</span>
+          <span class="work">
+            <span class="name">{p.name}</span>
+            {p.with && <span class="with">with {p.with}</span>}
+          </span>
+          <span class="kind">{p.kind}</span>
+          <span class="year">{p.year}</span>
+          <span class="status">{p.status}</span>
+          <span class="mark" aria-hidden="true"></span>
+        </summary>
+        <div class="entry">
+          {p.plate && (
+            <figure class:list={['plate', `is-${p.plate.kind}`]}>
+              <div class="mat">
+                {p.plate.kind === 'loop' ? (
+                  <Loop loop={p.plate.loop} sizes={sizes} />
+                ) : p.plate.kind === 'image' ? (
+                  <Picture image={p.plate.image} sizes={sizes} />
+                ) : (
+                  p.plate.images.map((image) => <div class="phone"><Picture image={image} sizes="(min-width: 60em) 12rem, 40vw" /></div>)
+                )}
+              </div>
+              <figcaption>Pl. {roman(start + i)} · {p.name}</figcaption>
+            </figure>
+          )}
+          <div class="text">
+            <p class="line">{p.line}</p>
+            {p.spec && <p class="spec">{p.spec}</p>}
+            <p class="meta">{p.kind} · {p.year} · {p.status}</p>
+            {p.links.length > 0 && (
+              <ul class="links">
+                {p.links.map((l) => (
+                  <li><a href={l.href}>{l.label}<svg class="ic" aria-hidden="true"><use href="#i-out"></use></svg></a></li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      </details>
+    </li>
+  ))}
+</ol>

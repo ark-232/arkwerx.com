@@ -1,0 +1,62 @@
+/* The index: one ruled row per project; the row opens to a captioned plate. */
+.cols, .index summary {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr) 8rem 4rem 8.5rem 1.25rem;
+  gap: 1rem;
+  align-items: baseline;
+}
+.cols { padding: 0.75rem 0.25rem; font: 500 0.72rem/1 var(--caps); letter-spacing: 0.16em; text-transform: lowercase; color: var(--slate); border-bottom: 1px solid var(--rule); }
+
+.index li { border-bottom: 1px solid var(--rule); }
+.index summary {
+  list-style: none; cursor: pointer; padding: 1.15rem 0.25rem;
+  transition: background-color 0.25s;
+}
+.index summary::-webkit-details-marker { display: none; }
+.index summary:hover, .index details[open] summary { background: var(--mat); }
+.no { font: 500 0.85rem/1 var(--caps); letter-spacing: 0.1em; color: var(--ox); font-variant-numeric: lining-nums tabular-nums; }
+.work { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2rem 0.8rem; }
+.work .name { font: 500 1.3rem/1.2 var(--caps); letter-spacing: 0.04em; }
+.work .with { font-size: 0.92rem; font-style: italic; color: var(--slate); }
+.kind, .year, .status { font-size: 0.95rem; color: var(--slate); }
+.year { font-variant-numeric: lining-nums tabular-nums; }
+.mark { position: relative; width: 0.9rem; height: 0.9rem; align-self: center; }
+.mark::before, .mark::after { content: ""; position: absolute; inset: 50% 0 auto; height: 1px; background: var(--ox); transition: transform 0.35s var(--ease); }
+.mark::after { transform: rotate(90deg); }
+details[open] .mark::after { transform: rotate(0deg); }
+
+.entry { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: clamp(1.5rem, 4vw, 3rem); padding: 1.75rem 0.9rem 2.5rem; }
+.entry:not(:has(.plate)) { grid-template-columns: minmax(0, 1fr); }
+.plate .mat { background: var(--mat); border: 1px solid var(--navy); padding: clamp(0.6rem, 1.5vw, 1rem); }
+.plate figcaption { margin-top: 0.6rem; font: 500 0.75rem/1 var(--caps); letter-spacing: 0.16em; text-transform: lowercase; color: var(--slate); }
+.plate.is-phones .mat { display: flex; justify-content: center; gap: clamp(0.75rem, 3vw, 2rem); }
+.plate .phone { width: min(42%, 12rem); }
+.plate .phone img { border: 1px solid var(--rule-2); }
+.text { display: grid; align-content: start; gap: 0.9rem; }
+.text .line { font-size: 1.2rem; line-height: 1.45; max-width: 26em; }
+.text .spec { font: 0.85rem/1.4 var(--mono); color: var(--slate); }
+.text .meta { font: 500 0.75rem/1 var(--caps); letter-spacing: 0.16em; text-transform: lowercase; color: var(--slate); }
+.text .links { display: flex; flex-wrap: wrap; gap: 0.6rem 1.4rem; margin-top: 0.4rem; }
+.text .links a { display: inline-flex; align-items: center; gap: 0.35rem; text-decoration: none; color: var(--ox); border-bottom: 1px solid currentColor; padding-bottom: 0.1rem; }
+.text .links a:hover { color: var(--navy); }
+
+/* Loops: the poster shows until the video plays; the button pauses it. */
+.loop { position: relative; }
+.loop video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.6s; }
+.loop video.on { opacity: 1; }
+.loop-toggle {
+  position: absolute; right: 0.6rem; bottom: 0.6rem; display: grid; place-items: center;
+  width: 2.25rem; height: 2.25rem; border: 0; background: rgb(28 42 59 / 0.85); color: var(--bone); cursor: pointer;
+}
+.loop-toggle .i-pause, .loop-toggle[data-state="playing"] .i-play { display: none; }
+.loop-toggle[data-state="playing"] .i-pause { display: block; }
+
+.disclaimer { margin-top: 1.5rem; max-width: 46rem; font-size: 0.88rem; line-height: 1.55; font-style: italic; color: var(--slate); }
+
+@media (max-width: 48em) {
+  .cols { display: none; }
+  .index summary { grid-template-columns: 2.25rem minmax(0, 1fr) 1.25rem; }
+  .kind, .year, .status { display: none; }
+  .entry { grid-template-columns: minmax(0, 1fr); padding-inline: 0.25rem; }
+}
+@media (min-width: 48.01em) { .text .meta { display: none; } }

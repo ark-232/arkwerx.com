@@ -1,34 +1,45 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
-const HEADINGS = ['Work', 'Writing', 'Education', 'Stack', 'Have a project or a question? Write.'];
+const PAGES = ['/', '/projects', '/members', '/contact'];
 const SEND = { name: 'Send' };
+const SENT = 'Thank you. Your message has reached the firm.';
 
 async function fillValid(page: Page) {
   await page.getByLabel('Name').fill('Ada Lovelace');
   await page.getByLabel('Email').fill('ada@example.com');
-  await page.getByLabel('A question about my work').check();
+  await page.getByLabel('A question about a project').check();
   await page.getByLabel('Message').fill('Does quillify read XFA forms?');
+}
+
+async function openAirmark(page: Page) {
+  await page.goto('/projects');
+  await page.locator('#airmark summary').click();
+  await page.locator('#airmark .loop').scrollIntoViewIfNeeded();
 }
 
 test('loads every resource from its own origin and sets no cookies', async ({ page, context, baseURL }) => {
   const origins = new Set<string>();
   page.on('request', (r) => origins.add(new URL(r.url()).origin));
-  await page.goto('/');
-  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-  await page.waitForLoadState('networkidle');
+  for (const path of PAGES) {
+    await page.goto(path);
+    for (const summary of await page.locator('summary').all()) await summary.click();
+    for (const plate of await page.locator('.plate').all()) await plate.scrollIntoViewIfNeeded();
+    await page.waitForLoadState('networkidle');
+  }
   expect([...origins]).toEqual([new URL(baseURL!).origin]);
   expect(await context.cookies()).toEqual([]);
 });
 
-for (const colorScheme of ['light', 'dark'] as const) {
-  test(`has no axe violations or console errors in ${colorScheme} mode`, async ({ browser }) => {
-    const context = await browser.newContext({ colorScheme, reducedMotion: 'reduce' });
+for (const path of PAGES) {
+  test(`${path} has no axe violations or console errors`, async ({ browser }) => {
+    const context = await browser.newContext({ reducedMotion: 'reduce' });
     const page = await context.newPage();
     const errors: string[] = [];
     page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
     page.on('pageerror', (e) => errors.push(e.message));
-    await page.goto('/');
+    await page.goto(path);
+    for (const summary of await page.locator('summary').all()) await summary.click();
     const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
     expect(results.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).join(', ')}`)).toEqual([]);
     expect(errors).toEqual([]);
@@ -36,10 +47,13 @@ for (const colorScheme of ['light', 'dark'] as const) {
   });
 }
 
-test('does not scroll sideways at 320 px', async ({ browser }) => {
+test('no page scrolls sideways at 320 px, with every project open', async ({ browser }) => {
   const page = await browser.newPage({ viewport: { width: 320, height: 640 } });
-  await page.goto('/');
-  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
+  for (const path of PAGES) {
+    await page.goto(path);
+    for (const summary of await page.locator('summary').all()) await summary.click();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth), path).toBeLessThanOrEqual(320);
+  }
   await page.close();
 });
 
@@ -47,12 +61,24 @@ test('reads in full with JavaScript off', async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   await page.goto('/');
-  await expect(page.getByRole('heading', { level: 1, name: 'Enrique O.' })).toBeVisible();
-  for (const name of HEADINGS) await expect(page.getByRole('heading', { level: 2, name, exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: 'Advisory & Engineering.' })).toBeVisible();
+  const rows = page.getByRole('navigation', { name: 'Sections' }).getByRole('link');
+  await expect(rows).toHaveText([/Projects/, /Members/, /Contact/]);
+
+  await page.goto('/projects');
+  for (const name of ['I Works', 'II Collaborations']) await expect(page.getByRole('heading', { level: 2, name })).toBeVisible();
+  await expect(page.locator('details')).toHaveCount(9);
+  await page.locator('#airmark summary').click();
   await expect(page.getByAltText(/^Airmark memo editor/)).toBeVisible();
   await expect(page.locator('.loop-toggle').first()).toBeHidden();
+  await expect(page.getByText(/personal capacity/)).toBeVisible();
+
+  await page.goto('/members');
+  await expect(page.getByRole('heading', { level: 2, name: 'Enrique O.' })).toBeVisible();
+
+  await page.goto('/contact');
   await expect(page.locator('form.contact-form')).toBeHidden();
-  await expect(page.getByText('The form needs JavaScript.')).toBeVisible();
+  await expect(page.getByText('The form needs JavaScript to send.')).toBeVisible();
   await context.close();
 });
 
@@ -69,10 +95,10 @@ test.describe('contact form', () => {
       posted = true;
       return route.fulfill({ json: { ok: true } });
     });
-    await page.goto('/');
+    await page.goto('/contact');
     await page.getByRole('button', SEND).click();
     await expect(page.locator('#c-name-error')).toHaveText('Enter your name.');
-    await expect(page.locator('#c-email-error')).toHaveText('Enter an email address I can reply to.');
+    await expect(page.locator('#c-email-error')).toHaveText('Enter an email address for the reply.');
     await expect(page.locator('#c-topic-error')).toHaveText('Pick a topic.');
     await expect(page.locator('#c-message-error')).toHaveText('Write a message.');
     await expect(page.getByLabel('Name')).toBeFocused();
@@ -85,10 +111,10 @@ test.describe('contact form', () => {
       body = route.request().postData() ?? '';
       return route.fulfill({ json: { ok: true } });
     });
-    await page.goto('/');
+    await page.goto('/contact');
     await fillValid(page);
     await page.getByRole('button', SEND).click();
-    await expect(page.getByRole('heading', { name: 'Thanks. It’s in my inbox.' })).toBeFocused();
+    await expect(page.getByRole('heading', { name: SENT })).toBeFocused();
     await expect(page.locator('form.contact-form')).toBeHidden();
     const sent = new URLSearchParams(body);
     expect(sent.get('topic')).toBe('question');
@@ -96,7 +122,7 @@ test.describe('contact form', () => {
   });
 
   test('explains a rate limit and a dropped connection, and keeps the text', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/contact');
     await fillValid(page);
     await page.route('**/api/contact', (route) => route.fulfill({ status: 429, json: { error: 'rate_limited' } }));
     await page.getByRole('button', SEND).click();
@@ -115,11 +141,11 @@ test.describe('contact form', () => {
       posted = true;
       return route.fulfill({ json: { ok: true } });
     });
-    await page.goto('/');
+    await page.goto('/contact');
     await fillValid(page);
     await page.locator('#c-botcheck').fill('bot', { force: true });
     await page.getByRole('button', SEND).click();
-    await expect(page.getByRole('heading', { name: 'Thanks. It’s in my inbox.' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: SENT })).toBeVisible();
     expect(posted).toBe(false);
   });
 });
@@ -133,11 +159,11 @@ test('the local Worker accepts a same-origin message and refuses a cross-origin 
   expect(forbidden.status()).toBe(403);
 });
 
-test('the hero loop plays in view and pauses on request', async ({ page }) => {
-  await page.goto('/');
+test('a project loop plays once its row is open and pauses on request', async ({ page }) => {
+  await openAirmark(page);
   const button = page.getByRole('button', { name: 'Pause the Airmark loop' });
   await expect(button).toBeVisible();
-  const video = page.locator('.hero video');
+  const video = page.locator('#airmark video');
   await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.paused)).toBe(false);
   await button.click();
   await expect(page.getByRole('button', { name: 'Play the Airmark loop' })).toBeVisible();
@@ -147,8 +173,8 @@ test('the hero loop plays in view and pauses on request', async ({ page }) => {
 test('leaves the loops paused under reduced motion', async ({ browser }) => {
   const context = await browser.newContext({ reducedMotion: 'reduce' });
   const page = await context.newPage();
-  await page.goto('/');
+  await openAirmark(page);
   await expect(page.getByRole('button', { name: 'Play the Airmark loop' })).toBeVisible();
-  expect(await page.locator('.hero video').evaluate((v: HTMLVideoElement) => v.paused)).toBe(true);
+  expect(await page.locator('#airmark video').evaluate((v: HTMLVideoElement) => v.paused)).toBe(true);
   await context.close();
 });

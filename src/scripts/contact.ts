@@ -2,7 +2,7 @@ import { EMAIL, LIMITS, cleanName } from '../contact-rules';
 
 const FIELD_ERRORS: Record<string, string> = {
   name: 'Enter your name.',
-  email: 'Enter an email address I can reply to.',
+  email: 'Enter an email address for the reply.',
   topic: 'Pick a topic.',
   message: 'Write a message.',
 };
@@ -52,7 +52,7 @@ function show(problems: Problem[]) {
 function done() {
   form.hidden = true;
   sent.hidden = false;
-  sent.querySelector<HTMLElement>('h3')!.focus();
+  sent.querySelector<HTMLElement>('h2')!.focus();
 }
 
 function fail(message: string) {

@@ -1,121 +1,43 @@
 ---
 import Base from '../layouts/Base.astro';
-import Hero from '../components/Hero.astro';
-import Sprite from '../components/Sprite.astro';
-import Work from '../components/Work.astro';
 import { site } from '../content/site';
-import { LIMITS, TOPICS } from '../contact-rules';
-import '../styles/hero.css';
-import '../styles/work.css';
-import '../styles/sections.css';
-import '../styles/motion.css';
+import '../styles/pages.css';
 
-const month = (date: string) => new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(date));
-const linkedin = site.profiles.find((p) => p.label === 'LinkedIn')!;
-const github = site.profiles.find((p) => p.label === 'GitHub')!;
-const ask = site.contact.line.split(' ').at(-1)!;
-const lead = site.contact.line.slice(0, -ask.length);
+const rows = [
+  { no: 'I', href: '/projects', label: 'Projects', text: 'Works and collaborations.' },
+  { no: 'II', href: '/members', label: 'Members', text: 'The people of the firm.' },
+  { no: 'III', href: '/contact', label: 'Contact', text: site.contact },
+];
 ---
 
-<Base title={`${site.name} · Senior software engineer · Security`} description={site.description}>
-  <Sprite />
-  <a class="skip" href="#work">Skip to work</a>
-  <Hero />
+<Base path="/">
+  <section class="front wrap">
+    <div>
+      <p class="kicker">Est. {site.established}</p>
+      <h1 class="display">{site.descriptor}.</h1>
+      <p class="lede">{site.description}</p>
+    </div>
+    <img class="front-seal" src="/seal.svg" alt="The ArkWerx seal: a white eagle on an oxblood shield." width="300" height="356" fetchpriority="high" />
+  </section>
 
-  <main>
-    <Work />
-
-    <section id="writing" class="writing wrap" aria-labelledby="writing-h">
-      <h2 id="writing-h" class="h2">Writing</h2>
-      <ul class="wr-list">
-        {site.writing.map((w) => (
-          <li class="rv rv-rule">
-            <a class="wr" href={w.link.href}>
-              <span class="wr-t">{w.title}</span>
-              <span class="wr-d"><time datetime={w.date}>{month(w.date)}</time>{w.with && `, with ${w.with}`}. {w.text}</span>
-              <span class="wr-go">{w.link.label}<svg class="ic" aria-hidden="true"><use href="#i-out"></use></svg></span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </section>
-
-    <section class="about wrap" aria-labelledby="edu-h">
-      <div>
-        <h2 id="edu-h" class="h2">Education</h2>
-        <ul class="edu">
-          {site.education.map((e) => (
-            <li class="rv rv-rise"><b>{e.credential}</b>{e.detail && <span>{e.detail}</span>}</li>
-          ))}
-        </ul>
-      </div>
-      <div>
-        <h2 class="h2">Stack</h2>
-        <ul class="stack-chips">
-          {site.stack.items.map((s) => <li class="rv rv-pop">{s}</li>)}
-        </ul>
-      </div>
-    </section>
-
-    <section id="contact" class="contact" aria-labelledby="contact-h">
-      <div class="ct-card rv rv-open">
-        <h2 id="contact-h" class="ct-h">{lead}<span>{ask}</span></h2>
-        <form class="contact-form" action="/api/contact" method="post" novalidate hidden>
-          <div class="f2">
-            <div class="fld">
-              <label for="c-name">Name</label>
-              <input id="c-name" name="name" type="text" autocomplete="name" maxlength={LIMITS.name} required aria-describedby="c-name-error" />
-              <p class="error" id="c-name-error"></p>
-            </div>
-            <div class="fld">
-              <label for="c-email">Email</label>
-              <input id="c-email" name="email" type="email" autocomplete="email" maxlength={LIMITS.email} required aria-describedby="c-email-error" />
-              <p class="error" id="c-email-error"></p>
-            </div>
-          </div>
-          <fieldset class="fld topic" aria-describedby="c-topic-error">
-            <legend>Topic</legend>
-            <div class="choices">
-              {Object.entries(TOPICS).map(([value, label]) => (
-                <label class="rad"><input type="radio" name="topic" value={value} required /><span>{label}</span></label>
-              ))}
-            </div>
-            <p class="error" id="c-topic-error"></p>
-          </fieldset>
-          <div class="fld">
-            <label for="c-message">Message</label>
-            <textarea id="c-message" name="message" rows="5" maxlength={LIMITS.message} required aria-describedby="c-message-error"></textarea>
-            <p class="error" id="c-message-error"></p>
-          </div>
-          <div class="hp" aria-hidden="true">
-            <label for="c-botcheck">Leave this field empty</label>
-            <input id="c-botcheck" name="botcheck" type="text" tabindex="-1" autocomplete="off" />
-          </div>
-          <div class="send-row">
-            <button class="send" type="submit">Send</button>
-            <p class="form-status" role="status" aria-live="polite"></p>
-          </div>
-        </form>
-        <div class="sent" id="contact-sent" hidden>
-          <h3 tabindex="-1">Thanks. It’s in my inbox.</h3>
-        </div>
-        <p class="js-off">
-          The form needs JavaScript. You can also reach me on <a href={linkedin.href}>LinkedIn</a> or <a href={github.href}>GitHub</a>.
-        </p>
-      </div>
-    </section>
-  </main>
-
-  <footer class="foot wrap">
-    <a class="mark" href="#top" aria-label={`${site.name}, back to top`}>EO</a>
+  <nav class="rows wrap" aria-label="Sections">
     <ul>
-      {site.profiles.map((p) => <li><a href={p.href}>{p.label}</a></li>)}
-      <li><a href={site.source.href}>{site.source.label}</a></li>
+      {rows.map((r) => (
+        <li class="rv">
+          <a href={r.href}>
+            <span class="no">{r.no}</span>
+            <span class="name">{r.label}</span>
+            <span class="text">{r.text}</span>
+            <svg class="ic" aria-hidden="true"><use href="#i-out"></use></svg>
+          </a>
+        </li>
+      ))}
     </ul>
-  </footer>
+  </nav>
+
+  <div class="wrap"><p class="seal-note">{site.seal}</p></div>
 
   <script>
     import '../scripts/motion';
-    import '../scripts/contact';
   </script>
 </Base>

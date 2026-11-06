@@ -1,21 +1,24 @@
 ---
-import '@fontsource-variable/bricolage-grotesque/wdth.css';
-import '@fontsource-variable/geist/wght.css';
-import '@fontsource-variable/geist-mono/wght.css';
 import '../styles/tokens.css';
 import '../styles/base.css';
-import bricolage from '@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-wdth-normal.woff2?url';
-import geist from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url';
+import Sprite from '../components/Sprite.astro';
+import { site } from '../content/site';
 
 interface Props {
-  title: string;
-  description: string;
-  path?: string;
+  title?: string;
+  description?: string;
+  path: string;
 }
 
-const { title, description, path = '/' } = Astro.props;
+const { title, description = site.description, path } = Astro.props;
+const full = title ? `${title} · ${site.name}` : `${site.name} · ${site.descriptor}`;
 const canonical = new URL(path, Astro.site);
 const image = new URL('/og.png', Astro.site);
+const nav = [
+  { href: '/projects', label: 'Projects' },
+  { href: '/members', label: 'Members' },
+  { href: '/contact', label: 'Contact' },
+];
 ---
 
 <!doctype html>
@@ -23,18 +26,19 @@ const image = new URL('/og.png', Astro.site);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>{title}</title>
+    <title>{full}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <meta name="color-scheme" content="dark light" />
-    <meta name="theme-color" content="#FF5A1F" />
+    {path === '/404' && <meta name="robots" content="noindex" />}
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#1C2A3B" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="preload" href={bricolage} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={geist} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/SpectralSC-Medium.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Spectral-Regular.woff2" as="font" type="font/woff2" crossorigin />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content={title} />
+    <meta property="og:title" content={full} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={image} />
@@ -43,6 +47,32 @@ const image = new URL('/og.png', Astro.site);
     <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
-    <slot />
+    <Sprite />
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="mast wrap">
+      <a class="brand" href="/" aria-label={`${site.name}, home`}>
+        <img class="seal" src="/seal.svg" alt="" width="36" height="43" />
+        <img class="word" src="/wordmark.svg" alt="" width="128" height="16" />
+      </a>
+      <nav aria-label="Site">
+        <ul>
+          {nav.map((n) => (
+            <li><a href={n.href} aria-current={path === n.href ? 'page' : undefined}>{n.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="foot wrap">
+      <img class="foot-seal" src="/seal-navy.svg" alt="" width="180" height="214" loading="lazy" />
+      <p>
+        <span>{site.name} LLC</span>
+        <span>Est. {site.established}</span>
+        <span>Ultra fines</span>
+        <a href={site.source.href}>{site.source.label}</a>
+      </p>
+    </footer>
   </body>
 </html>

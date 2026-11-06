@@ -1,7 +1,7 @@
 // The contact form's rules, shared by the browser script, the Worker and the markup.
 export const TOPICS = {
   work: 'Working together',
-  question: 'A question about my work',
+  question: 'A question about a project',
   other: 'Something else',
 } as const;
 

@@ -1,0 +1,57 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../content/site';
+import { LIMITS, TOPICS } from '../contact-rules';
+import '../styles/pages.css';
+---
+
+<Base title="Contact" path="/contact">
+  <div class="page wrap">
+    <h1 class="display">Contact</h1>
+    <p class="lede">{site.contact}</p>
+    <form class="contact-form" action="/api/contact" method="post" novalidate hidden>
+      <div class="f2">
+        <div class="fld">
+          <label for="c-name">Name</label>
+          <input id="c-name" name="name" type="text" autocomplete="name" maxlength={LIMITS.name} required aria-describedby="c-name-error" />
+          <p class="error" id="c-name-error"></p>
+        </div>
+        <div class="fld">
+          <label for="c-email">Email</label>
+          <input id="c-email" name="email" type="email" autocomplete="email" maxlength={LIMITS.email} required aria-describedby="c-email-error" />
+          <p class="error" id="c-email-error"></p>
+        </div>
+      </div>
+      <fieldset class="fld topic" aria-describedby="c-topic-error">
+        <legend>Topic</legend>
+        <div class="choices">
+          {Object.entries(TOPICS).map(([value, label]) => (
+            <label class="rad"><input type="radio" name="topic" value={value} required /><span>{label}</span></label>
+          ))}
+        </div>
+        <p class="error" id="c-topic-error"></p>
+      </fieldset>
+      <div class="fld">
+        <label for="c-message">Message</label>
+        <textarea id="c-message" name="message" rows="6" maxlength={LIMITS.message} required aria-describedby="c-message-error"></textarea>
+        <p class="error" id="c-message-error"></p>
+      </div>
+      <div class="hp" aria-hidden="true">
+        <label for="c-botcheck">Leave this field empty</label>
+        <input id="c-botcheck" name="botcheck" type="text" tabindex="-1" autocomplete="off" />
+      </div>
+      <div class="send-row">
+        <button class="send" type="submit">Send</button>
+        <p class="form-status" role="status" aria-live="polite"></p>
+      </div>
+    </form>
+    <div class="sent" id="contact-sent" hidden>
+      <h2 tabindex="-1">Thank you. Your message has reached the firm.</h2>
+    </div>
+    <p class="js-off">The form needs JavaScript to send.</p>
+  </div>
+
+  <script>
+    import '../scripts/contact';
+  </script>
+</Base>

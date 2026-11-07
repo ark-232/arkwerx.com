@@ -93,3 +93,8 @@
 .notfound { padding-block: clamp(4rem, 12vw, 8rem); }
 .notfound p { margin-top: 1.5rem; }
 .notfound a { color: var(--madder); }
+
+/* Privacy */
+.prose p { max-width: 36em; color: var(--fog); margin-bottom: 1.1rem; }
+.prose a { color: var(--madder); }
+.prose .updated { margin-top: 2rem; font: 500 0.75rem/1 var(--caps); letter-spacing: 0.16em; text-transform: lowercase; color: var(--dim); }

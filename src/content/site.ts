@@ -234,7 +234,7 @@ export const site = Site.parse({
     {
       name: 'Enrique O.',
       title: 'Principal',
-      bio: 'Enrique O. founded ArkWerx and leads its work. He is a software engineer and security practitioner whose work runs from secure web applications and document systems to native Apple software, including software that holds a government Authorization to Operate.',
+      bio: 'Enrique O. focuses on cybersecurity, offensive and defensive, and on the policy around it. He develops software from secure web applications to AI tooling built on the Model Context Protocol, and has delivered software to government organizations. His background includes startups and work abroad, and he speaks Spanish and Russian.',
       links: [
         { label: 'GitHub', href: 'https://github.com/ark-232' },
         { label: 'LinkedIn', href: 'https://www.linkedin.com/in/eaoti/' },
@@ -243,8 +243,8 @@ export const site = Site.parse({
     },
     {
       name: 'David P.',
-      title: 'Member',
-      bio: 'David P. is a member of ArkWerx and works on its design and engineering. He is a software developer and designer whose work runs from interface design and brand marks to mobile apps and the tooling that connects AI assistants to document systems. He studied computer science, and he and Enrique O. have built software together since their student years.',
+      title: 'Principal',
+      bio: 'David P. focuses on defense and air doctrine, and on the software and design that serve them. He builds interfaces, brand marks and mobile apps, and works on AI tooling that turns structured data into finished documents. He studied computer science, has built software alongside Enrique O. for years, and speaks French.',
       links: [
         { label: 'GitHub', href: 'https://github.com/D-Pretzel' },
         { label: 'LinkedIn', href: 'https://www.linkedin.com/in/david-petzold/' },

@@ -1,10 +1,102 @@
-/* One motion: rows settle into place once as they enter. Scroll-driven where supported; the script adds .io and .in elsewhere. */
-@keyframes rv { from { opacity: 0; transform: translateY(10px); } }
+/*
+  Motion. Every resting style is the final state, so reduced motion and no-JS read a finished page.
+  .intro (set by head.js) marks the first landing on Home in a session.
+*/
+@keyframes fade { from { opacity: 0; } }
+@keyframes rise { from { opacity: 0; translate: 0 12px; } }
+@keyframes word { from { opacity: 0; translate: 0 0.35em; filter: blur(4px); } }
+@keyframes draw { from { stroke-dashoffset: 1; } }
+@keyframes wipe { from { clip-path: inset(0 0 100% 0); } }
+@keyframes draw-x { from { transform: scaleX(0); } }
+@keyframes sheen { from { background-position: 100% 0; } to { background-position: 0 0; } }
+@keyframes caret { from, to { opacity: 1; } }
+@keyframes blink { 0%, 30%, 60% { opacity: 1; } 15%, 45%, 75%, 100% { opacity: 0; } }
+@keyframes develop { from { opacity: 0; filter: blur(8px) brightness(0.55); } }
+@keyframes page-out { to { opacity: 0; translate: 0 -6px; } }
+@keyframes page-in { from { opacity: 0; translate: 0 10px; } }
+@keyframes firm { from { background-color: rgb(28 42 59 / 0); border-bottom-color: transparent; } }
+@keyframes drift { to { translate: 0 -48px; } }
+
+.w:nth-child(2) { --n: 1; } .w:nth-child(3) { --n: 2; } .w:nth-child(4) { --n: 3; }
+.w:nth-child(5) { --n: 4; } .w:nth-child(6) { --n: 5; } .w:nth-child(7) { --n: 6; }
+.w:nth-child(8) { --n: 7; } .w:nth-child(9) { --n: 8; } .w:nth-child(10) { --n: 9; }
+.w:nth-child(11) { --n: 10; } .w:nth-child(n + 12) { --n: 11; }
+.stream .w::after { content: ""; position: absolute; right: -0.12em; top: 0.18em; width: 1px; height: 1em; background: var(--madder); opacity: 0; }
 
 @media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    .rv { animation: rv var(--ease) both; animation-duration: auto; animation-timeline: view(); animation-range: entry 0% entry 70%; }
+  /* Between pages: the masthead holds, the seal and the active-page bar travel, the page lifts and settles. */
+  @view-transition { navigation: auto; }
+  main { view-transition-name: page; }
+  ::view-transition-old(page) { animation: page-out var(--t-exit) var(--e-out) both; }
+  ::view-transition-new(page) { animation: page-in var(--t-enter) var(--e-out) 80ms both; }
+  ::view-transition-group(seal), ::view-transition-group(nav-cur) { animation-duration: var(--t-morph); animation-timing-function: var(--e-draw); }
+
+  /* Every page arrives: the heading rises and the section rules draw. */
+  .page > .display, html:not(.intro) .front > div { animation: rise var(--t-enter) var(--e-out) both; }
+  html:not(.intro) .seal-x { animation: fade 600ms var(--e-out) both; }
+  .members::before, .rows ul::before { animation: draw-x 700ms var(--e-out) 120ms both; }
+
+  /* First landing on Home: the seal engraves itself and the line streams in. */
+  .intro .seal-x .edge path, .intro .seal-x .kl path { stroke-dasharray: 1; animation: draw var(--t-draw) var(--e-draw) both; }
+  .intro .seal-x .kl path { animation-delay: 150ms; }
+  .intro .seal-x .field { animation: fade 700ms var(--e-out) 350ms both; }
+  .intro .seal-x .eagle { animation: wipe 700ms var(--e-out) 600ms both; }
+  .intro .heading .w { animation: word 520ms var(--e-out) both; animation-delay: calc(80ms + var(--n, 0) * 70ms); }
+  .intro .stream .w { animation: fade 160ms linear both; animation-delay: calc(250ms + var(--n, 0) * var(--stream)); }
+  .intro .stream .w::after { animation: caret var(--stream) linear; animation-delay: calc(250ms + var(--n, 0) * var(--stream)); }
+  .intro .stream .w:last-child::after { animation: blink 1.2s steps(1) calc(250ms + var(--n, 0) * var(--stream)); }
+  .intro .rows li { animation: rise var(--t-enter) var(--e-out) both; }
+  .intro .rows li:nth-child(1) { animation-delay: 300ms; }
+  .intro .rows li:nth-child(2) { animation-delay: 360ms; }
+  .intro .rows li:nth-child(3) { animation-delay: 420ms; }
+  .intro .kicker { animation: fade 300ms var(--e-out) both, sheen 900ms linear 900ms both; }
+  .intro .kicker { background: linear-gradient(100deg, currentColor 0 40%, #FFE6E3 50%, currentColor 60% 100%) 100% 0 / 300% 100% no-repeat; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+
+  /* Projects: a row opens, the plate develops like a print in a tray, the notes follow. */
+  details[open] .plate { animation: rise 520ms var(--e-out) both; }
+  details[open] .mat > :is(.loop, .phone), details[open] .mat > picture > img { animation: develop 700ms var(--e-out) 120ms both; }
+  details[open] .plate figcaption { animation: fade 300ms var(--e-out) 300ms both; }
+  details[open] .text > * { animation: rise var(--t-enter) var(--e-out) both; }
+  details[open] .text > :nth-child(1) { animation-delay: 160ms; }
+  details[open] .text > :nth-child(2) { animation-delay: 220ms; }
+  details[open] .text > :nth-child(3) { animation-delay: 280ms; }
+  details[open] .text > :nth-child(n + 4) { animation-delay: 340ms; }
+  @supports (interpolate-size: allow-keywords) and selector(::details-content) {
+    :root { interpolate-size: allow-keywords; }
+    .index details::details-content { block-size: 0; overflow-y: clip; transition: block-size 200ms var(--e-out), content-visibility 200ms allow-discrete; }
+    .index details[open]::details-content { block-size: auto; transition-duration: var(--t-open); }
   }
-  .io .rv { transition: opacity 0.4s var(--ease), transform 0.4s var(--ease); }
-  .io .rv:not(.in) { opacity: 0; transform: translateY(10px); }
+
+  /* Contact */
+  .sent:not([hidden]) h2 { animation: rise var(--t-enter) var(--e-out) both; }
+  .form-status.is-sending {
+    background: linear-gradient(100deg, currentColor 0 40%, #FFF3EE 50%, currentColor 60% 100%) 100% 0 / 300% 100% no-repeat;
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    animation: sheen 1.4s linear infinite;
+  }
+
+  /* Scroll-driven where supported; motion.ts adds .io and .in elsewhere. */
+  @supports (animation-timeline: view()) {
+    .rv { animation: rise linear both; animation-timeline: view(); animation-range: entry 0% entry 60%; }
+    .intro .rows li { animation-timeline: auto; }
+    .mast { animation: firm linear both; animation-timeline: scroll(root); animation-range: 0 96px; }
+    .home .brand .seal { animation: fade linear both; animation-timeline: scroll(root); animation-range: 20vh 45vh; }
+    .seal-x { animation: drift linear both; animation-timeline: scroll(root); animation-range: 0 70vh; }
+    .intro .seal-x { animation: none; }
+    .label { view-timeline: --label block; }
+    .label::after { animation: draw-x linear both; animation-timeline: --label; animation-range: entry 0% entry 100%; }
+    .member { view-timeline: --member block; }
+    .member > * { animation: rise linear both; animation-timeline: --member; }
+    .member > h2 { animation-range: entry 0% entry 50%; }
+    .member > .title { animation-range: entry 10% entry 60%; }
+    .member > .bio { animation-range: entry 20% entry 70%; }
+    .foot { view-timeline: --foot block; }
+    .motto {
+      background: linear-gradient(100deg, currentColor 0 40%, #FFF3EE 50%, currentColor 60% 100%) 100% 0 / 300% 100% no-repeat;
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+      animation: sheen linear both; animation-timeline: --foot; animation-range: entry 30% entry 100%;
+    }
+  }
+  .io .rv { transition: opacity var(--t-enter) var(--e-out), translate var(--t-enter) var(--e-out); }
+  .io .rv:not(.in) { opacity: 0; translate: 0 12px; }
 }

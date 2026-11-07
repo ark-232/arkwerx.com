@@ -1,25 +1,40 @@
-/* ArkWerx brand v1: bone paper, navy ink, oxblood accent, slate secondary. One light theme. */
+/* ArkWerx brand v1, dark: a navy ground, bone ink, oxblood only in the seal. Ratios are WCAG against --ground. */
 @font-face { font-family: "Spectral SC"; src: url("/fonts/SpectralSC-Medium.woff2") format("woff2"); font-weight: 500; font-display: swap; }
 @font-face { font-family: "Spectral"; src: url("/fonts/Spectral-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 @font-face { font-family: "Spectral"; src: url("/fonts/Spectral-Italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
 @font-face { font-family: "Spectral"; src: url("/fonts/Spectral-Medium.woff2") format("woff2"); font-weight: 500; font-display: swap; }
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 
-  --bone: #F4F1EA;
-  --mat: #EAE5DA;
-  --navy: #1C2A3B;
+  --ground: #1C2A3B;
+  --raise: #22334A;
+  --mat: #142030;
+  --bone: #F4F1EA;   /* 12.9 */
+  --fog: #A9B0BA;    /* 6.65 */
+  --dim: #8E97A3;    /* 4.92 */
+  --madder: #D38A8E; /* 5.40 */
+  --ctl: #6B7788;    /* 3.20, form borders */
+  --rule: rgb(244 241 234 / 0.12);
+  --rule-2: rgb(244 241 234 / 0.28);
   --ox: #7B1E24;
-  --slate: #3A3F47;
-  --rule: rgb(28 42 59 / 0.16);
-  --rule-2: rgb(28 42 59 / 0.32);
 
   --caps: "Spectral SC", Georgia, "Times New Roman", serif;
   --serif: "Spectral", Georgia, "Times New Roman", serif;
   --mono: ui-monospace, "SF Mono", Menlo, monospace;
 
-  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --e-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --e-draw: cubic-bezier(0.65, 0, 0.35, 1);
+  --t-tap: 120ms;
+  --t-hover: 180ms;
+  --t-exit: 160ms;
+  --t-open: 320ms;
+  --t-enter: 420ms;
+  --t-morph: 520ms;
+  --t-draw: 1100ms;
+  --stream: 45ms;
+
   --gut: clamp(1.25rem, 5vw, 3rem);
   --max: 72rem;
+  --mast-h: 4.5rem;
 }

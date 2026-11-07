@@ -50,12 +50,14 @@ function show(problems: Problem[]) {
 }
 
 function done() {
+  status.classList.remove('is-sending');
   form.hidden = true;
   sent.hidden = false;
   sent.querySelector<HTMLElement>('h2')!.focus();
 }
 
 function fail(message: string) {
+  status.classList.remove('is-sending');
   button.disabled = false;
   status.textContent = message;
   status.classList.add('is-error');
@@ -72,6 +74,7 @@ form.addEventListener('submit', async (event) => {
 
   button.disabled = true;
   status.classList.remove('is-error');
+  status.classList.add('is-sending');
   status.textContent = 'Sending…';
 
   const body = new URLSearchParams();
@@ -91,6 +94,7 @@ form.addEventListener('submit', async (event) => {
   if (reply.error === 'rate_limited') return fail(LIMITED);
   const fields = (reply.fields ?? []).filter((name) => name in FIELD_ERRORS);
   if (reply.error === 'invalid' && fields.length) {
+    status.classList.remove('is-sending');
     button.disabled = false;
     status.textContent = '';
     return show(fields.map((name) => ({ name, message: FIELD_ERRORS[name] })));

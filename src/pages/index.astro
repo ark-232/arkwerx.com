@@ -1,8 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
+import SealMark from '../components/SealMark.astro';
 import { site } from '../content/site';
 import '../styles/pages.css';
 
+const words = (text: string) => text.split(' ');
 const rows = [
   { no: 'I', href: '/projects', label: 'Projects', text: 'Works and collaborations.' },
   { no: 'II', href: '/members', label: 'Members', text: 'The people of the firm.' },
@@ -14,10 +16,14 @@ const rows = [
   <section class="front wrap">
     <div>
       <p class="kicker">Est. {site.established}</p>
-      <h1 class="display">{site.descriptor}.</h1>
-      <p class="lede">{site.description}</p>
+      <h1 class="display heading">
+        {words(`${site.descriptor}.`).map((w, i) => <>{i > 0 && ' '}<span class="w">{w}</span></>)}
+      </h1>
+      <p class="lede stream">
+        {words(site.description).map((w, i) => <>{i > 0 && ' '}<span class="w">{w}</span></>)}
+      </p>
     </div>
-    <img class="front-seal" src="/seal.svg" alt="The ArkWerx seal: a white eagle on an oxblood shield." width="300" height="356" fetchpriority="high" />
+    <SealMark />
   </section>
 
   <nav class="rows wrap" aria-label="Sections">
@@ -34,10 +40,4 @@ const rows = [
       ))}
     </ul>
   </nav>
-
-  <div class="wrap"><p class="seal-note">{site.seal}</p></div>
-
-  <script>
-    import '../scripts/motion';
-  </script>
 </Base>

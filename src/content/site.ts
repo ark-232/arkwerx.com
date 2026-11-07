@@ -44,7 +44,6 @@ const Site = z.strictObject({
   name: z.literal('ArkWerx'),
   descriptor: z.string().max(40),
   established: z.number().int(),
-  seal: z.string().max(140),
   description: z.string().max(200),
   source: link,
   works: z.array(project).min(1),
@@ -58,7 +57,6 @@ export const site = Site.parse({
   name: 'ArkWerx',
   descriptor: 'Advisory & Engineering',
   established: 2021,
-  seal: 'The shield and the eagle come from a family coat of arms. Ultra fines is Latin for “beyond the borders”.',
   description: 'ArkWerx is a private advisory and engineering firm.',
   source: { label: 'Source on GitHub', href: 'https://github.com/ark-232/arkwerx.com' },
 

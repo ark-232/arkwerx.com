@@ -1,5 +1,3 @@
-import '../styles/motion.css';
-
 const root = document.documentElement;
 const reduce = matchMedia('(prefers-reduced-motion: reduce)');
 

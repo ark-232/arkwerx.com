@@ -1,6 +1,12 @@
 *, *::before, *::after { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; overflow-x: clip; scroll-behavior: smooth; }
+html {
+  -webkit-text-size-adjust: 100%;
+  overflow-x: clip;
+  background: var(--ground);
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--mast-h) + 1rem);
+}
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 body {
@@ -8,18 +14,21 @@ body {
   min-height: 100svh;
   display: flex;
   flex-direction: column;
-  background: var(--bone);
-  color: var(--navy);
+  color: var(--bone);
   font: 400 1.0625rem/1.6 var(--serif);
   font-variant-numeric: oldstyle-nums proportional-nums;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  accent-color: var(--ox);
+  accent-color: var(--madder);
 }
+/* Vignette and a still grain, both under the content. */
+body::before, body::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+body::before { background: radial-gradient(120% 80% at 50% 0%, transparent 55%, rgb(8 13 20 / 0.5)); }
+body::after { background: url("/grain.webp") 0 0 / 160px; opacity: 0.045; }
 main { flex: 1; }
 
-::selection { background: var(--navy); color: var(--bone); }
-:focus-visible { outline: 2px solid var(--ox); outline-offset: 3px; }
+::selection { background: var(--ox); color: var(--bone); }
+:focus-visible { outline: 2px solid var(--bone); outline-offset: 3px; transition: none; }
 
 [hidden] { display: none !important; }
 img, video { display: block; max-width: 100%; height: auto; }
@@ -34,35 +43,55 @@ button, input, textarea { font: inherit; color: inherit; }
 .ic { width: 0.85em; height: 0.85em; flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: square; }
 .ic.solid { fill: currentColor; stroke: none; }
 
-.skip { position: absolute; left: 0.75rem; top: -4rem; z-index: 50; padding: 0.6rem 1rem; background: var(--navy); color: var(--bone); }
+.skip { position: absolute; left: 0.75rem; top: -4rem; z-index: 60; padding: 0.6rem 1rem; background: var(--bone); color: var(--ground); }
 .skip:focus { top: 0.75rem; }
 
-/* Masthead */
-.mast { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 1.25rem; border-bottom: 1px solid var(--rule); }
+/* Masthead: full-width and sticky; it firms up once the page scrolls (motion.css). */
+.mast {
+  position: sticky; top: 0; z-index: 40;
+  background: rgb(28 42 59 / 0.94);
+  border-bottom: 1px solid var(--rule);
+  view-transition-name: mast;
+}
+.mast .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: var(--mast-h); }
 .brand { display: flex; align-items: center; gap: 0.85rem; text-decoration: none; }
-.brand .seal { width: 32px; height: auto; }
+.brand .seal { width: 30px; height: auto; }
+html:not(.home) .brand .seal { view-transition-name: seal; }
 .brand .word { width: 112px; height: auto; }
 .mast ul { display: flex; gap: clamp(0.9rem, 3vw, 2rem); }
 .mast nav a {
+  position: relative; display: inline-block; padding-block: 0.5rem;
   font: 500 0.82rem/1 var(--caps); letter-spacing: 0.14em; text-transform: lowercase;
-  color: var(--slate); text-decoration: none; padding-block: 0.4rem; border-bottom: 1px solid transparent;
-  transition: color 0.2s, border-color 0.2s;
+  color: var(--fog); text-decoration: none; transition: color var(--t-hover) var(--e-out);
 }
-.mast nav a:hover { color: var(--navy); }
-.mast nav a[aria-current="page"] { color: var(--ox); border-color: var(--ox); }
+.mast nav a::after, .cur {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--madder);
+}
+.mast nav a::after { transform: scaleX(0); transform-origin: right; transition: transform var(--t-exit) var(--e-out); }
+.mast nav a:hover { color: var(--bone); }
+.mast nav a:hover::after { transform: scaleX(1); transform-origin: left; transition-duration: var(--t-hover); }
+.mast nav a[aria-current="page"] { color: var(--bone); }
+.mast nav a[aria-current="page"]::after { content: none; }
+.cur { view-transition-name: nav-cur; }
 @media (max-width: 30em) { .brand .word { display: none; } }
 
 /* Footer */
-.foot { position: relative; margin-top: clamp(4rem, 10vw, 7rem); padding-block: 2rem 2.5rem; border-top: 1px solid var(--rule); overflow: hidden; }
-.foot-seal { position: absolute; right: 0; top: 50%; width: 3.25rem; transform: translateY(-50%); opacity: 0.14; pointer-events: none; }
-.foot p { position: relative; padding-right: 4.5rem; display: flex; flex-wrap: wrap; gap: 0.4rem 1.5rem; font: 500 0.75rem/1.4 var(--caps); letter-spacing: 0.14em; text-transform: lowercase; color: var(--slate); }
-.foot a { text-decoration: none; border-bottom: 1px solid var(--rule-2); }
-.foot a:hover { color: var(--ox); border-color: var(--ox); }
+.foot { position: relative; margin-top: clamp(4rem, 10vw, 7rem); border-top: 1px solid var(--rule); }
+.foot .wrap { position: relative; padding-block: 2rem 2.5rem; }
+.foot-seal { position: absolute; right: 0; top: 50%; width: 3.25rem; transform: translateY(-50%); opacity: 0.08; pointer-events: none; }
+.foot p { display: flex; flex-wrap: wrap; gap: 0.4rem 1.5rem; padding-right: 4.5rem; font: 500 0.75rem/1.4 var(--caps); letter-spacing: 0.14em; text-transform: lowercase; color: var(--dim); }
+.foot a { text-decoration: none; border-bottom: 1px solid var(--rule-2); transition: color var(--t-hover), border-color var(--t-hover); }
+.foot a:hover { color: var(--madder); border-color: var(--madder); }
 
 /* Shared type */
-.display { font: 500 clamp(2.4rem, 7.5vw, 4.75rem)/1.02 var(--caps); letter-spacing: 0.03em; text-wrap: balance; }
-.lede { font-size: clamp(1.15rem, 2.2vw, 1.35rem); line-height: 1.5; max-width: 32em; }
-.label { display: flex; align-items: baseline; gap: 0.9rem; font: 500 0.85rem/1 var(--caps); letter-spacing: 0.16em; text-transform: lowercase; color: var(--slate); padding-bottom: 0.9rem; border-bottom: 1px solid var(--navy); }
-.label span { color: var(--ox); }
+.display { font: 500 clamp(2.4rem, 7.5vw, 4.75rem)/1.04 var(--caps); letter-spacing: 0.03em; text-wrap: balance; }
+.lede { font-size: clamp(1.15rem, 2.2vw, 1.35rem); line-height: 1.5; max-width: 32em; color: var(--fog); }
+.label { position: relative; display: flex; align-items: baseline; gap: 0.9rem; font: 500 0.85rem/1 var(--caps); letter-spacing: 0.16em; text-transform: lowercase; color: var(--dim); padding-bottom: 0.9rem; }
+.label::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--rule-2); transform-origin: left; }
+.label span { color: var(--madder); }
 
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+@media (forced-colors: active) {
+  .kicker, .motto { -webkit-text-fill-color: CanvasText; background: none; }
+}

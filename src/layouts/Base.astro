@@ -1,6 +1,7 @@
 ---
 import '../styles/tokens.css';
 import '../styles/base.css';
+import '../styles/motion.css';
 import Sprite from '../components/Sprite.astro';
 import { site } from '../content/site';
 
@@ -22,7 +23,7 @@ const nav = [
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class:list={{ home: path === '/' }}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -30,8 +31,9 @@ const nav = [
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     {path === '/404' && <meta name="robots" content="noindex" />}
-    <meta name="color-scheme" content="light" />
+    <meta name="color-scheme" content="dark" />
     <meta name="theme-color" content="#1C2A3B" />
+    <script is:inline src="/head.js"></script>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -49,30 +51,41 @@ const nav = [
   <body>
     <Sprite />
     <a class="skip" href="#main">Skip to content</a>
-    <header class="mast wrap">
-      <a class="brand" href="/" aria-label={`${site.name}, home`}>
-        <img class="seal" src="/seal.svg" alt="" width="36" height="43" />
-        <img class="word" src="/wordmark.svg" alt="" width="128" height="16" />
-      </a>
-      <nav aria-label="Site">
-        <ul>
-          {nav.map((n) => (
-            <li><a href={n.href} aria-current={path === n.href ? 'page' : undefined}>{n.label}</a></li>
-          ))}
-        </ul>
-      </nav>
+    <header class="mast">
+      <div class="wrap">
+        <a class="brand" href="/" aria-label={`${site.name}, home`}>
+          <img class="seal" src="/seal-reversed.svg" alt="" width="34" height="40" />
+          <img class="word" src="/wordmark-reversed.svg" alt="" width="128" height="16" />
+        </a>
+        <nav aria-label="Site">
+          <ul>
+            {nav.map((n) => (
+              <li>
+                <a href={n.href} aria-current={path === n.href ? 'page' : undefined}>
+                  {n.label}{path === n.href && <span class="cur" aria-hidden="true"></span>}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
     </header>
     <main id="main">
       <slot />
     </main>
-    <footer class="foot wrap">
-      <img class="foot-seal" src="/seal-navy.svg" alt="" width="180" height="214" loading="lazy" />
-      <p>
-        <span>{site.name} LLC</span>
-        <span>Est. {site.established}</span>
-        <span>Ultra fines</span>
-        <a href={site.source.href}>{site.source.label}</a>
-      </p>
+    <footer class="foot">
+      <div class="wrap">
+        <img class="foot-seal" src="/seal-white.svg" alt="" width="52" height="62" loading="lazy" />
+        <p>
+          <span>{site.name} LLC</span>
+          <span>Est. {site.established}</span>
+          <span class="motto">Ultra fines</span>
+          <a href={site.source.href}>{site.source.label}</a>
+        </p>
+      </div>
     </footer>
+    <script>
+      import '../scripts/motion';
+    </script>
   </body>
 </html>

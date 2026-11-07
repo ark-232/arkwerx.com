@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import '../styles/pages.css';
+
+const sections = [
+  ['Information, not advice', 'This site offers general information about ArkWerx LLC. It is not advice, and reading it creates no relationship with the firm.'],
+  ['Contacting the firm', 'A message sent through the contact form does not create an engagement or a duty of confidentiality, so please do not send confidential or sensitive material through it. An engagement begins only when both parties sign a written agreement.'],
+  ['Ownership', 'The ArkWerx name, seal and monogram and the content of this site belong to ArkWerx LLC. Projects listed under Collaborations belong to their owners, and source code linked from this site is governed by its own license.'],
+  ['Other sites', 'Links to other sites are provided for convenience, and the firm is not responsible for their content.'],
+  ['No warranty', 'The site is provided as it is, without warranty of any kind. To the extent the law allows, ArkWerx LLC is not liable for any loss arising from its use.'],
+  ['Governing law', 'These terms are governed by the laws of the State of Delaware. When they change, the date at the top changes with them.'],
+];
+---
+
+<Base title="Terms" path="/terms">
+  <div class="page wrap prose">
+    <h1 class="display">Terms</h1>
+    <p class="updated">Effective 6 November 2026</p>
+    {sections.map(([h, t]) => (
+      <section>
+        <h2>{h}</h2>
+        <p>{t}</p>
+      </section>
+    ))}
+  </div>
+</Base>

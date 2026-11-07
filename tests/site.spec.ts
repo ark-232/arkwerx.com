@@ -1,7 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
-const PAGES = ['/', '/projects', '/members', '/contact', '/privacy'];
+const PAGES = ['/', '/projects', '/members', '/contact', '/privacy', '/terms'];
 const SEND = { name: 'Send' };
 const SENT = 'Thank you. Your message has reached the firm.';
 

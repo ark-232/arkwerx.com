@@ -1,15 +1,31 @@
 ---
 import Base from '../layouts/Base.astro';
 import '../styles/pages.css';
+
+const sections = [
+  ['Who runs this site', 'ArkWerx LLC, a Delaware limited liability company, runs arkwerx.com and decides how the information described here is used.'],
+  ['What the site collects', 'The contact form sends your name, your email address, the topic you choose and your message. Cloudflare, which hosts the site, also processes the technical details of each request, such as your IP address, browser, the page requested and the time, in order to deliver the page and protect the site.'],
+  ['Why', 'The firm uses what you send through the form to read and answer your message, and for nothing else. It does not add you to a mailing list or build a profile of you. Cloudflare uses request data to serve the site, stop abuse and limit how often one connection can send the form.'],
+  ['Who handles it', 'Two companies handle this information for the firm. Cloudflare hosts the site and relays the form. Google hosts the firm’s mailbox, where your message arrives. The site has no database, so your message is kept only in that mailbox. The firm does not sell your information or share it for advertising, and discloses it to anyone else only when the law requires.'],
+  ['How long it is kept', 'Messages that do not lead to work are deleted within twelve months. Correspondence about an engagement is kept as long as the engagement and the firm’s legal obligations require. Cloudflare keeps its request logs under its own retention policy.'],
+  ['Security', 'Every page is served over HTTPS. The form’s contents go to the firm’s mailbox and are not stored on the site.'],
+  ['Your choices', 'You can ask to see, correct or delete a message you sent by writing through the contact page, and the firm will answer within 30 days. The site does no tracking, so a browser’s Do Not Track signal has nothing to turn off. If you are in the European Union or the United Kingdom, the firm handles your message on the basis of its legitimate interest in answering it, and you may complain to your data protection authority.'],
+  ['Clients', 'Information shared during an engagement is governed by the terms of that engagement. Invoices are issued and paid through Stripe under Stripe’s privacy policy, not through this site.'],
+  ['Children', 'This site is not directed to children under 13, and the firm does not knowingly collect their information.'],
+  ['Changes', 'When this page changes, the date at the top changes with it, and any significant change is noted here.'],
+];
 ---
 
 <Base title="Privacy" path="/privacy">
   <div class="page wrap prose">
     <h1 class="display">Privacy</h1>
-    <p>This site sets no cookies and runs no analytics or trackers. Everything it loads comes from this site.</p>
-    <p>The <a href="/contact">contact form</a> collects your name, email address, topic and message. The message is emailed to the firm and kept in that mailbox. It is not sold, shared or used for marketing.</p>
-    <p>Cloudflare hosts the site and handles connection data such as IP addresses to deliver pages, limit abuse of the form and keep the site secure.</p>
-    <p>To have a message deleted, ask through the contact page.</p>
-    <p class="updated">Updated 6 November 2026</p>
+    <p class="updated">Effective 6 November 2026</p>
+    <p class="short">This site sets no cookies and runs no analytics, advertising or third-party scripts. The only personal information it receives is what you type into the <a href="/contact">contact form</a>.</p>
+    {sections.map(([h, t]) => (
+      <section>
+        <h2>{h}</h2>
+        <p>{t}</p>
+      </section>
+    ))}
   </div>
 </Base>

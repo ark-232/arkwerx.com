@@ -98,7 +98,12 @@
 .notfound p { margin-top: 1.5rem; }
 .notfound a { color: var(--madder); }
 
-/* Privacy */
-.prose p { max-width: 36em; color: var(--fog); margin-bottom: 1.1rem; }
+/* Privacy and terms */
+.prose { max-width: 44rem; }
+.prose .updated { margin: -1.5rem 0 2rem; font: 500 0.75rem/1 var(--caps); letter-spacing: 0.16em; text-transform: lowercase; color: var(--dim); }
+.prose .short { font-size: 1.15rem; line-height: 1.55; color: var(--bone); padding-bottom: 1.75rem; border-bottom: 1px solid var(--rule); margin-bottom: 0.5rem; }
+.prose section { padding-block: 1.25rem; border-bottom: 1px solid var(--rule); }
+.prose h2 { font: 500 0.82rem/1.2 var(--caps); letter-spacing: 0.16em; text-transform: lowercase; color: var(--madder); margin-bottom: 0.6rem; }
+.prose section p { color: var(--fog); max-width: 38em; }
 .prose a { color: var(--madder); }
-.prose .updated { margin-top: 2rem; font: 500 0.75rem/1 var(--caps); letter-spacing: 0.16em; text-transform: lowercase; color: var(--dim); }
+.prose section + section { margin-top: 0; }

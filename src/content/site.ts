@@ -234,7 +234,7 @@ export const site = Site.parse({
     {
       name: 'Enrique O.',
       title: 'Principal',
-      bio: 'Enrique O. advises on cybersecurity, offensive and defensive, and on the policy that shapes it. He has built and run software and network systems used by thousands, delivered software to government organizations, and worked with early-stage startups and abroad. His engineering covers secure web platforms and AI systems built on the Model Context Protocol. He co-authored defense research on leader development and works in Spanish and Russian.',
+      bio: 'Enrique O. advises on cybersecurity and the policy that governs it. He has built and secured software for government organizations, including systems used by more than 50,000 people. His practice spans offensive and defensive security, AI systems and early-stage ventures. He has co-authored defense research on leader development, studied abroad and works in Spanish and Russian.',
       links: [
         { label: 'GitHub', href: 'https://github.com/ark-232' },
         { label: 'LinkedIn', href: 'https://www.linkedin.com/in/eaoti/' },
@@ -244,7 +244,7 @@ export const site = Site.parse({
     {
       name: 'David P.',
       title: 'Principal',
-      bio: 'David P. advises on defense, air doctrine and the design of the software that serves them. He has designed and delivered enterprise software and networks for organizations of thousands, taking products from user research and prototype to full rollout. His engineering spans full-stack development, interface design and AI integration through the Model Context Protocol. He co-authored defense research on leader development, has worked in multinational settings and speaks French.',
+      bio: 'David P. advises on defense and air doctrine. He has designed and built software used by tens of thousands, taking each system from user research to full rollout. His practice spans human-centered design, full-stack engineering and AI systems. He has co-authored defense research on leader development and on how foreign air forces train their officers, and he speaks French.',
       links: [
         { label: 'GitHub', href: 'https://github.com/D-Pretzel' },
         { label: 'LinkedIn', href: 'https://www.linkedin.com/in/david-petzold/' },

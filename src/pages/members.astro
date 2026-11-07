@@ -10,8 +10,15 @@ import '../styles/pages.css';
     <ul class="members">
       {site.members.map((m) => (
         <li class="member rv">
-          <h2>{m.name}</h2>
-          <p class="title">{m.title}</p>
+          <div class="who">
+            <h2>{m.name}</h2>
+            <p class="title">{m.title}</p>
+            {m.links.length > 0 && (
+              <ul class="mlinks">
+                {m.links.map((l) => <li><a href={l.href}>{l.label}<svg class="ic" aria-hidden="true"><use href="#i-out"></use></svg></a></li>)}
+              </ul>
+            )}
+          </div>
           <p class="bio">{m.bio}</p>
         </li>
       ))}

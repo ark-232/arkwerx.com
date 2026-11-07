@@ -49,7 +49,7 @@ const Site = z.strictObject({
   works: z.array(project).min(1),
   collaborations: z.array(project),
   disclaimer: z.string().max(240),
-  members: z.array(z.strictObject({ name: z.string().max(40), title: z.string().max(40), bio: z.string().max(400), ledger })).min(1),
+  members: z.array(z.strictObject({ name: z.string().max(40), title: z.string().max(40), bio: z.string().max(400), links: z.array(link).max(3), ledger: ledger.optional() })).min(1),
   contact: z.string().max(80),
 });
 
@@ -235,7 +235,20 @@ export const site = Site.parse({
       name: 'Enrique O.',
       title: 'Principal',
       bio: 'Enrique O. founded ArkWerx and leads its work. He is a software engineer and security practitioner whose work runs from secure web applications and document systems to native Apple software, including software that holds a government Authorization to Operate.',
+      links: [
+        { label: 'GitHub', href: 'https://github.com/ark-232' },
+        { label: 'LinkedIn', href: 'https://www.linkedin.com/in/eaoti/' },
+      ],
       ledger: ['own-01', 'own-07', 'ttq-01', 'ttq-04'],
+    },
+    {
+      name: 'David P.',
+      title: 'Member',
+      bio: 'David P. is a member of ArkWerx and works on its design and engineering. He is a software developer and designer whose work runs from interface design and brand marks to mobile apps and the tooling that connects AI assistants to document systems. He studied computer science, and he and Enrique O. have built software together since their student years.',
+      links: [
+        { label: 'GitHub', href: 'https://github.com/D-Pretzel' },
+        { label: 'LinkedIn', href: 'https://www.linkedin.com/in/david-petzold/' },
+      ],
     },
   ],
 

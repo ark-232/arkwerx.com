@@ -87,8 +87,7 @@
     .label::after { animation: draw-x linear both; animation-timeline: --label; animation-range: entry 0% entry 100%; }
     .member { view-timeline: --member block; }
     .member > * { animation: rise linear both; animation-timeline: --member; }
-    .member > h2 { animation-range: entry 0% entry 50%; }
-    .member > .title { animation-range: entry 10% entry 60%; }
+    .member > .who { animation-range: entry 0% entry 50%; }
     .member > .bio { animation-range: entry 20% entry 70%; }
     .foot { view-timeline: --foot block; }
     .motto {

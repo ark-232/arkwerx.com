@@ -44,11 +44,15 @@
 .members::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--rule-2); transform-origin: left; }
 .member { display: grid; grid-template-columns: minmax(12rem, 18rem) 1fr; gap: 0.5rem 3rem; padding-block: 2rem; border-bottom: 1px solid var(--rule); }
 .member h2 { font: 500 1.6rem/1.15 var(--caps); letter-spacing: 0.04em; }
-.member .title { grid-column: 1; font: 500 0.82rem/1 var(--caps); letter-spacing: 0.16em; text-transform: lowercase; color: var(--madder); }
-.member .bio { grid-column: 2; grid-row: 1 / span 2; max-width: 36em; color: var(--fog); }
+.member .who { display: grid; align-content: start; gap: 0.7rem; }
+.member .title { font: 500 0.82rem/1 var(--caps); letter-spacing: 0.16em; text-transform: lowercase; color: var(--madder); }
+.member .bio { max-width: 36em; color: var(--fog); }
+.mlinks { display: flex; gap: 1.2rem; margin-top: 0.3rem; }
+.mlinks a { display: inline-flex; align-items: center; gap: 0.35rem; font: 500 0.78rem/1 var(--caps); letter-spacing: 0.14em; text-transform: lowercase; color: var(--madder); text-decoration: none; padding-bottom: 0.25rem; border-bottom: 1px solid currentColor; transition: color var(--t-hover); }
+.mlinks a:hover { color: var(--bone); }
 @media (max-width: 40em) {
   .member { grid-template-columns: 1fr; }
-  .member .bio { grid-column: 1; grid-row: auto; margin-top: 0.75rem; }
+  .member .bio { margin-top: 0.5rem; }
 }
 
 /* Contact */

@@ -234,7 +234,7 @@ export const site = Site.parse({
     {
       name: 'Enrique O.',
       title: 'Principal',
-      bio: 'Enrique O. focuses on cybersecurity, offensive and defensive, and on the policy around it. He develops software from secure web applications to AI tooling built on the Model Context Protocol, and has delivered software to government organizations. His background includes startups and work abroad, and he speaks Spanish and Russian.',
+      bio: 'Enrique O. advises on cybersecurity, offensive and defensive, and on the policy that shapes it. He has built and run software and network systems used by thousands, delivered software to government organizations, and worked with early-stage startups and abroad. His engineering covers secure web platforms and AI systems built on the Model Context Protocol. He co-authored defense research on leader development and works in Spanish and Russian.',
       links: [
         { label: 'GitHub', href: 'https://github.com/ark-232' },
         { label: 'LinkedIn', href: 'https://www.linkedin.com/in/eaoti/' },
@@ -244,7 +244,7 @@ export const site = Site.parse({
     {
       name: 'David P.',
       title: 'Principal',
-      bio: 'David P. focuses on defense and air doctrine, and on the software and design that serve them. He builds interfaces, brand marks and mobile apps, and works on AI tooling that turns structured data into finished documents. He studied computer science, has built software alongside Enrique O. for years, and speaks French.',
+      bio: 'David P. advises on defense, air doctrine and the design of the software that serves them. He has designed and delivered enterprise software and networks for organizations of thousands, taking products from user research and prototype to full rollout. His engineering spans full-stack development, interface design and AI integration through the Model Context Protocol. He co-authored defense research on leader development, has worked in multinational settings and speaks French.',
       links: [
         { label: 'GitHub', href: 'https://github.com/D-Pretzel' },
         { label: 'LinkedIn', href: 'https://www.linkedin.com/in/david-petzold/' },

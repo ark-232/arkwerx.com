@@ -50,7 +50,7 @@ for (const box of document.querySelectorAll<HTMLElement>('.loop')) {
   button.hidden = false;
 }
 
-// Home sheet: hairline guides and two ruler readouts follow a fine pointer, unsmoothed.
+// The sheet: a caret on each ruler and two readouts follow a fine pointer, unsmoothed.
 const sheet = document.querySelector<HTMLElement>('.sheet');
 if (sheet) {
   const fine = matchMedia('(hover: hover) and (pointer: fine)');
@@ -77,5 +77,6 @@ if (sheet) {
     at = e;
     frame ||= requestAnimationFrame(aim);
   });
+  addEventListener('scroll', () => { if (at) frame ||= requestAnimationFrame(aim); }, { passive: true });
   document.documentElement.addEventListener('pointerleave', () => sheet.classList.remove('aim'));
 }

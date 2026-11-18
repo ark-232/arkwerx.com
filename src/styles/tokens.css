@@ -34,7 +34,8 @@
   --t-morph: 520ms;
   --t-draw: 1100ms;
 
-  --gut: clamp(1.25rem, 5vw, 3rem);
+  --gut: clamp(1.75rem, 5vw, 3rem);
+  --in: clamp(0.625rem, 1.25vw, 1.125rem);
   --max: 72rem;
   --mast-h: 4.5rem;
 }

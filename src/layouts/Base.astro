@@ -49,14 +49,12 @@ const nav = [
     <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
-    {path === '/' && (
-      <div class="sheet" aria-hidden="true">
-        <span class="e et"></span><span class="e er"></span><span class="e eb"></span><span class="e el"></span>
-        <span class="ru rux"></span><span class="ru ruy"></span>
-        <span class="g gv"></span><span class="g gh"></span>
-        <span class="rd rdx"></span><span class="rd rdy"></span>
-      </div>
-    )}
+    <div class="sheet" aria-hidden="true">
+      <span class="e et"></span><span class="e er"></span><span class="e eb"></span><span class="e el"></span>
+      <span class="ru rux"></span><span class="ru ruy"></span>
+      <span class="ca cax"></span><span class="ca cay"></span>
+      <span class="rd rdx"></span><span class="rd rdy"></span>
+    </div>
     <Sprite />
     <a class="skip" href="#main">Skip to content</a>
     <header class="mast">
@@ -82,8 +80,7 @@ const nav = [
       <slot />
     </main>
     <footer class="foot">
-      {path === '/' ? (
-        <div class="wrap tbk">
+      <div class="wrap tbk">
           <p class="legal">
             <a href="/privacy">Privacy</a>
             <a href="/terms">Terms</a>
@@ -96,18 +93,6 @@ const nav = [
             <p class="motto">Ultra fines</p>
           </div>
         </div>
-      ) : (
-      <div class="wrap">
-        <p>
-          <span>{site.name} LLC</span>
-          <span>Est. {site.established}</span>
-          <span class="motto">Ultra fines</span>
-          <a href="/privacy">Privacy</a>
-          <a href="/terms">Terms</a>
-          <a href={site.source.href}>{site.source.label}</a>
-        </p>
-      </div>
-      )}
     </footer>
     <script>
       import '../scripts/motion';

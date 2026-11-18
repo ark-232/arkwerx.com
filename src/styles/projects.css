@@ -19,10 +19,11 @@
 .work .with { font-size: 0.92rem; font-style: italic; color: var(--fog); }
 .kind, .year, .status { font-size: 0.95rem; color: var(--fog); }
 .year { font-variant-numeric: lining-nums tabular-nums; }
-.mark { position: relative; width: 0.9rem; height: 0.9rem; align-self: center; }
-.mark::before, .mark::after { content: ""; position: absolute; inset: 50% 0 auto; height: 1px; background: var(--madder); transition: rotate var(--t-open) var(--e-out); }
-.mark::after { rotate: 90deg; }
-details[open] .mark::after { rotate: 0deg; }
+.mark { position: relative; width: 15px; height: 15px; align-self: center; }
+.mark::before, .mark::after { content: ""; position: absolute; background: var(--madder); }
+.mark::before { left: 0; right: 0; top: 7px; height: 1px; }
+.mark::after { top: 0; bottom: 0; left: 7px; width: 1px; transition: scale var(--t-open) var(--e-out); }
+details[open] .mark::after { scale: 1 0; }
 
 .entry { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: clamp(1.5rem, 4vw, 3rem); padding: 1.75rem 0.5rem 2.5rem; }
 .entry:not(:has(.plate)) { grid-template-columns: minmax(0, 1fr); }

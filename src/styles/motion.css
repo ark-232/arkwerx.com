@@ -15,7 +15,7 @@
 @keyframes develop { from { opacity: 0; filter: blur(8px) brightness(0.55); } }
 @keyframes page-out { to { opacity: 0; translate: 0 -6px; } }
 @keyframes page-in { from { opacity: 0; translate: 0 10px; } }
-@keyframes firm { from { background-color: rgb(11 17 26 / 0); border-bottom-color: transparent; } }
+@keyframes firm { to { background-color: var(--ground); border-bottom-color: var(--rule); } }
 
 .w:nth-child(2) { --n: 1; } .w:nth-child(3) { --n: 2; } .w:nth-child(4) { --n: 3; }
 .w:nth-child(5) { --n: 4; } .w:nth-child(6) { --n: 5; } .w:nth-child(7) { --n: 6; }
@@ -89,7 +89,6 @@
   @supports (animation-timeline: view()) {
     .rv { animation: rise linear both; animation-timeline: view(); animation-range: entry 0% entry 60%; }
     .intro .rows li { animation-timeline: auto; }
-    .mast { animation: firm linear both; animation-timeline: scroll(root); animation-range: 0 96px; }
     .label { view-timeline: --label block; }
     .label::after { animation: draw-x linear both; animation-timeline: --label; animation-range: entry 0% entry 100%; }
     .member { view-timeline: --member block; }
@@ -105,4 +104,19 @@
   }
   .io .rv { transition: opacity var(--t-enter) var(--e-out), translate var(--t-enter) var(--e-out); }
   .io .rv:not(.in) { opacity: 0; translate: 0 12px; }
+}
+
+/*
+  Scroll-linked, opacity only, so it stays under reduced motion. The masthead band fades in over the first 96 px.
+  On Home the masthead seal stays hidden until the hero seal has passed under the masthead; with no scroll (or no support) it stays hidden.
+*/
+@keyframes show { to { opacity: 1; translate: 0 0; } }
+.home .brand .seal { opacity: 0; }
+@media (min-width: 30.01em) { .home .brand .word { translate: calc(-30px - 0.85rem) 0; } }
+@supports not (animation-timeline: view()) { .mast::before { background-color: var(--ground); border-bottom-color: var(--rule); } }
+@supports (animation-timeline: view()) {
+  .mast::before { animation: firm linear both; animation-timeline: scroll(root); animation-range: 0 96px; }
+  body { timeline-scope: --hero; }
+  .drawing .seal-x { view-timeline: --hero block; view-timeline-inset: calc(var(--mast-h) + 10px) 0; }
+  .home .brand :is(.seal, .word) { animation: show linear both; animation-timeline: --hero; animation-range: exit 40% exit 100%; }
 }

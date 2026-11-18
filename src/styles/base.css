@@ -70,6 +70,11 @@ html:not(.home) .brand .seal { view-transition-name: seal; }
 .mast nav a[aria-current="page"]::after { content: none; }
 .cur { view-transition-name: nav-cur; }
 @media (max-width: 30em) { .brand .word { display: none; } }
+@media (max-width: 22.5em) {
+  .brand .seal { flex: none; width: 24px; }
+  .mast ul { gap: 0.8rem; }
+  .mast nav a { font-size: 0.75rem; letter-spacing: 0.12em; }
+}
 
 /* Footer */
 .foot { position: relative; margin-top: clamp(4rem, 10vw, 7rem); border-top: 1px solid var(--rule); }

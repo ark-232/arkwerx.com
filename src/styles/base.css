@@ -78,8 +78,7 @@ html:not(.home) .brand .seal { view-transition-name: seal; }
 /* Footer */
 .foot { position: relative; margin-top: clamp(4rem, 10vw, 7rem); border-top: 1px solid var(--rule); }
 .foot .wrap { position: relative; padding-block: 2rem 2.5rem; }
-.foot-seal { position: absolute; right: 0; top: 50%; width: 3.25rem; transform: translateY(-50%); opacity: 0.08; pointer-events: none; }
-.foot p { display: flex; flex-wrap: wrap; gap: 0.4rem 1.5rem; padding-right: 4.5rem; font: 500 0.75rem/1.4 var(--caps); letter-spacing: 0.14em; text-transform: lowercase; color: var(--dim); }
+.foot p { display: flex; flex-wrap: wrap; gap: 0.4rem 1.5rem; font: 500 0.78rem/1.4 var(--caps); letter-spacing: 0.14em; text-transform: lowercase; color: var(--fog); }
 .foot a { text-decoration: none; border-bottom: 1px solid var(--rule-2); transition: color var(--t-hover), border-color var(--t-hover); }
 .foot a:hover { color: var(--madder); border-color: var(--madder); }
 

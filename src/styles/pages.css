@@ -4,13 +4,26 @@
 .front .lede { margin-top: 1.4rem; }
 .w { display: inline-block; position: relative; }
 
-.seal-x { position: relative; width: clamp(7.5rem, 17vw, 13.5rem); aspect-ratio: 867.3 / 1029.4; view-transition-name: seal; }
-.seal-x svg, .seal-x .eagle { position: absolute; inset: 0; width: 100%; height: 100%; }
+/* The seal sits in a pool of light, leans toward the pointer and catches it in a glint (motion.ts sets the vars). */
+@property --gx { syntax: "<percentage>"; inherits: true; initial-value: 30%; }
+.seal-x {
+  position: relative; width: clamp(7.5rem, 17vw, 13.5rem); aspect-ratio: 867.3 / 1029.4; view-transition-name: seal;
+  transform: perspective(60rem) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 700ms var(--e-out);
+}
+.seal-x::before { content: ""; position: absolute; inset: -45% -60%; z-index: -1; background: radial-gradient(closest-side, rgb(244 241 234 / 0.1), rgb(244 241 234 / 0.035) 55%, transparent); pointer-events: none; }
+.seal-x svg, .seal-x .eagle, .seal-x .glare { position: absolute; inset: 0; width: 100%; height: 100%; }
+.seal-x .glare {
+  -webkit-mask: url("/seal-white.svg") 0 0 / 100% 100% no-repeat; mask: url("/seal-white.svg") 0 0 / 100% 100% no-repeat;
+  background: radial-gradient(55% 40% at var(--gx) var(--gy, 22%), rgb(255 248 240 / 0.3), transparent 70%);
+  opacity: var(--glare, 0); transition: opacity 500ms var(--e-out); pointer-events: none;
+}
 @media (max-width: 40em) {
   .front { grid-template-columns: 1fr; }
   .seal-x { order: -1; width: 5.5rem; }
 }
 
+.rows { position: relative; }
 .rows ul { position: relative; }
 .rows ul::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--rule-2); transform-origin: left; }
 .rows li { border-bottom: 1px solid var(--rule); }
@@ -23,7 +36,27 @@
 .rows .name { font: 500 1.35rem/1.2 var(--caps); letter-spacing: 0.05em; }
 .rows .text { color: var(--fog); }
 .rows .ic { align-self: center; color: var(--madder); }
-.rows a:hover { background: var(--raise); }
+html:not(.js) .rows a:hover, .rows a:active { background: var(--raise); }
+
+/* One highlight glides between rows with engraved corner marks; the other rows step back. */
+.rows .hl {
+  --c: var(--madder); --k: 0.7rem;
+  position: absolute; left: 0; right: 0; top: 0; height: var(--h, 0); translate: 0 var(--y, 0);
+  pointer-events: none; opacity: 0;
+  background:
+    linear-gradient(var(--c), var(--c)) 0 0 / var(--k) 1px, linear-gradient(var(--c), var(--c)) 0 0 / 1px var(--k),
+    linear-gradient(var(--c), var(--c)) 100% 0 / var(--k) 1px, linear-gradient(var(--c), var(--c)) 100% 0 / 1px var(--k),
+    linear-gradient(var(--c), var(--c)) 0 100% / var(--k) 1px, linear-gradient(var(--c), var(--c)) 0 100% / 1px var(--k),
+    linear-gradient(var(--c), var(--c)) 100% 100% / var(--k) 1px, linear-gradient(var(--c), var(--c)) 100% 100% / 1px var(--k),
+    rgb(244 241 234 / 0.035);
+  background-repeat: no-repeat;
+  transition: translate 420ms var(--e-out), height 420ms var(--e-out), opacity 240ms var(--e-out);
+}
+.rows .hl.snap { transition: opacity 240ms var(--e-out); }
+.rows.on .hl { opacity: 1; }
+.rows.on li :is(.name, .text) { transition: color 260ms var(--e-out), translate var(--t-exit) var(--e-out); }
+.rows.on li:not(.at) .name { color: var(--fog); }
+.rows.on li:not(.at) .text { color: var(--dim); }
 .rows a:hover :is(.no, .name, .text) { translate: 6px 0; transition-duration: var(--t-hover); }
 .rows a:hover .ic { translate: 3px -3px; transition-duration: var(--t-hover); }
 .rows a:hover .text { color: var(--bone); }

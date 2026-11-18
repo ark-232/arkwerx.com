@@ -21,10 +21,6 @@ body {
   text-rendering: optimizeLegibility;
   accent-color: var(--madder);
 }
-/* Vignette and a still grain, both under the content. */
-body::before, body::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; }
-body::before { background: radial-gradient(120% 80% at 50% 0%, transparent 55%, rgb(8 13 20 / 0.5)); }
-body::after { background: url("/grain.webp") 0 0 / 160px; opacity: 0.045; }
 main { flex: 1; }
 
 ::selection { background: var(--ox); color: var(--bone); }
@@ -49,7 +45,7 @@ button, input, textarea { font: inherit; color: inherit; }
 /* Masthead: full-width and sticky; it firms up once the page scrolls (motion.css). */
 .mast {
   position: sticky; top: 0; z-index: 40;
-  background: rgb(28 42 59 / 0.94);
+  background: rgb(11 17 26 / 0.94);
   border-bottom: 1px solid var(--rule);
   view-transition-name: mast;
 }

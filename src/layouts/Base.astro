@@ -32,7 +32,7 @@ const nav = [
     <link rel="canonical" href={canonical} />
     {path === '/404' && <meta name="robots" content="noindex" />}
     <meta name="color-scheme" content="dark" />
-    <meta name="theme-color" content="#1C2A3B" />
+    <meta name="theme-color" content="#0B111A" />
     <script is:inline src="/head.js"></script>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
@@ -49,6 +49,14 @@ const nav = [
     <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
+    {path === '/' && (
+      <div class="sheet" aria-hidden="true">
+        <span class="e et"></span><span class="e er"></span><span class="e eb"></span><span class="e el"></span>
+        <span class="ru rux"></span><span class="ru ruy"></span>
+        <span class="g gv"></span><span class="g gh"></span>
+        <span class="rd rdx"></span><span class="rd rdy"></span>
+      </div>
+    )}
     <Sprite />
     <a class="skip" href="#main">Skip to content</a>
     <header class="mast">
@@ -74,6 +82,21 @@ const nav = [
       <slot />
     </main>
     <footer class="foot">
+      {path === '/' ? (
+        <div class="wrap tbk">
+          <p class="legal">
+            <a href="/privacy">Privacy</a>
+            <a href="/terms">Terms</a>
+            <a href={site.source.href}>{site.source.label}</a>
+          </p>
+          <div class="tb">
+            <p class="tb-name">{site.name} LLC</p>
+            <p>Est. {site.established}</p>
+            <p>{site.descriptor}</p>
+            <p class="motto">Ultra fines</p>
+          </div>
+        </div>
+      ) : (
       <div class="wrap">
         <p>
           <span>{site.name} LLC</span>
@@ -84,6 +107,7 @@ const nav = [
           <a href={site.source.href}>{site.source.label}</a>
         </p>
       </div>
+      )}
     </footer>
     <script>
       import '../scripts/motion';

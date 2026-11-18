@@ -46,7 +46,7 @@ details[open] .mark::after { rotate: 0deg; }
 .loop video.on { opacity: 1; }
 .loop-toggle {
   position: absolute; right: 0.6rem; bottom: 0.6rem; display: grid; place-items: center;
-  width: 2.25rem; height: 2.25rem; border: 0; background: rgb(20 32 48 / 0.85); color: var(--bone); cursor: pointer;
+  width: 2.25rem; height: 2.25rem; border: 0; background: rgb(11 17 26 / 0.85); color: var(--bone); cursor: pointer;
 }
 .loop-toggle .i-pause, .loop-toggle[data-state="playing"] .i-play { display: none; }
 .loop-toggle[data-state="playing"] .i-pause { display: block; }

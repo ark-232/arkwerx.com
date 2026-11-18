@@ -8,21 +8,19 @@
 @keyframes draw { from { stroke-dashoffset: 1; } }
 @keyframes wipe { from { clip-path: inset(0 0 100% 0); } }
 @keyframes draw-x { from { transform: scaleX(0); } }
+@keyframes grow-x { from { transform: scaleX(0); } }
+@keyframes grow-y { from { transform: scaleY(0); } }
+@keyframes settle { from { opacity: 0.75; } }
 @keyframes sheen { from { background-position: 100% 0; } to { background-position: 0 0; } }
-@keyframes caret { from, to { opacity: 1; } }
-@keyframes blink { 0%, 30%, 60% { opacity: 1; } 15%, 45%, 75%, 100% { opacity: 0; } }
 @keyframes develop { from { opacity: 0; filter: blur(8px) brightness(0.55); } }
 @keyframes page-out { to { opacity: 0; translate: 0 -6px; } }
 @keyframes page-in { from { opacity: 0; translate: 0 10px; } }
-@keyframes firm { from { background-color: rgb(28 42 59 / 0); border-bottom-color: transparent; } }
-@keyframes drift { to { translate: 0 -48px; } }
-@keyframes glint { from { --gx: -30%; opacity: 0; } 35% { opacity: 1; } to { --gx: 130%; opacity: 0; } }
+@keyframes firm { from { background-color: rgb(11 17 26 / 0); border-bottom-color: transparent; } }
 
 .w:nth-child(2) { --n: 1; } .w:nth-child(3) { --n: 2; } .w:nth-child(4) { --n: 3; }
 .w:nth-child(5) { --n: 4; } .w:nth-child(6) { --n: 5; } .w:nth-child(7) { --n: 6; }
 .w:nth-child(8) { --n: 7; } .w:nth-child(9) { --n: 8; } .w:nth-child(10) { --n: 9; }
 .w:nth-child(11) { --n: 10; } .w:nth-child(n + 12) { --n: 11; }
-.stream .w::after { content: ""; position: absolute; right: -0.12em; top: 0.18em; width: 1px; height: 1em; background: var(--madder); opacity: 0; }
 
 @media (prefers-reduced-motion: no-preference) {
   /* Between pages: the masthead holds, the seal and the active-page bar travel, the page lifts and settles. */
@@ -34,25 +32,35 @@
 
   /* Every page arrives: the heading rises and the section rules draw. */
   .page > .display, html:not(.intro) .front > div { animation: rise var(--t-enter) var(--e-out) both; }
-  html:not(.intro) .seal-x { animation: fade 600ms var(--e-out) both; }
+  html:not(.intro) .drawing { animation: fade 600ms var(--e-out) both; }
   .members::before, .rows ul::before { animation: draw-x 700ms var(--e-out) 120ms both; }
 
-  /* First landing on Home: the seal engraves itself and the line streams in. */
-  .intro .seal-x .edge path, .intro .seal-x .kl path { stroke-dasharray: 1; animation: draw var(--t-draw) var(--e-draw) both; }
-  .intro .seal-x .kl path { animation-delay: 150ms; }
-  .intro .seal-x .field { animation: fade 700ms var(--e-out) 350ms both; }
-  .intro .seal-x .eagle { animation: wipe 700ms var(--e-out) 600ms both; }
-  .intro .seal-x .glare { animation: glint 1400ms var(--e-draw) 1250ms both; }
-  .intro .heading .w { animation: word 520ms var(--e-out) both; animation-delay: calc(80ms + var(--n, 0) * 70ms); }
-  .intro .stream .w { animation: fade 160ms linear both; animation-delay: calc(250ms + var(--n, 0) * var(--stream)); }
-  .intro .stream .w::after { animation: caret var(--stream) linear; animation-delay: calc(250ms + var(--n, 0) * var(--stream)); }
-  .intro .stream .w:last-child::after { animation: blink 1.2s steps(1) calc(250ms + var(--n, 0) * var(--stream)); }
+  /*
+    First landing on Home, 1.8 s: the sheet's frame and rulers draw (0-500 ms), the construction lines
+    draw around an empty space (450-1150 ms), the seal engraves into them (950-1750 ms) and the lines settle.
+  */
+  .intro .sheet :is(.et, .eb, .rux) { animation: grow-x 500ms var(--e-draw) both; }
+  .intro .sheet :is(.el, .er, .ruy) { animation: grow-y 500ms var(--e-draw) both; }
+  .intro .sheet .ru { animation-delay: 60ms; }
+  .intro .cons .ax-v { animation: grow-y 700ms var(--e-draw) 450ms both, settle 500ms var(--e-out) 1300ms both; }
+  .intro .cons .ax-h { animation: grow-x 700ms var(--e-draw) 450ms both, settle 500ms var(--e-out) 1300ms both; }
+  .intro .cons .ci { stroke-dasharray: 1 1; animation: draw 700ms var(--e-draw) 450ms both, settle 500ms var(--e-out) 1300ms both; }
+  .intro .cons .ext { animation: grow-y 350ms var(--e-out) 750ms both, settle 500ms var(--e-out) 1300ms both; }
+  .intro .cons .dim { animation: grow-x 400ms var(--e-draw) 800ms both, settle 500ms var(--e-out) 1300ms both; }
+  .intro .cons .tk { animation: fade 150ms linear 1100ms both; }
+  .intro .seal-x .edge path, .intro .seal-x .kl path { stroke-dasharray: 1; animation: draw 650ms var(--e-draw) 950ms both; }
+  .intro .seal-x .kl path { animation-delay: 1050ms; }
+  .intro .seal-x .field { animation: fade 450ms var(--e-out) 1200ms both; }
+  .intro .seal-x .eagle { animation: wipe 500ms var(--e-out) 1250ms both; }
+  .intro .kicker { animation: fade 300ms var(--e-out) 300ms both; }
+  .intro .heading .w { animation: word 560ms var(--e-out) both; animation-delay: calc(380ms + var(--n, 0) * 90ms); }
+  .intro .front .lede { animation: rise 500ms var(--e-out) 700ms both; }
   .intro .rows li { animation: rise var(--t-enter) var(--e-out) both; }
-  .intro .rows li:nth-child(1) { animation-delay: 300ms; }
-  .intro .rows li:nth-child(2) { animation-delay: 360ms; }
-  .intro .rows li:nth-child(3) { animation-delay: 420ms; }
-  .intro .kicker { animation: fade 300ms var(--e-out) both, sheen 900ms linear 900ms both; }
-  .intro .kicker { background: linear-gradient(100deg, currentColor 0 40%, #FFE6E3 50%, currentColor 60% 100%) 100% 0 / 300% 100% no-repeat; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .intro .rows li:nth-child(1) { animation-delay: 850ms; }
+  .intro .rows li:nth-child(2) { animation-delay: 920ms; }
+  .intro .rows li:nth-child(3) { animation-delay: 990ms; }
+  .intro .rows ul::before { animation: draw-x 600ms var(--e-draw) 750ms both; }
+  .intro .foot { animation: fade 400ms var(--e-out) 1100ms both; }
 
   /* Projects: a row opens, the plate develops like a print in a tray, the notes follow. */
   details[open] .plate { animation: rise 520ms var(--e-out) both; }
@@ -82,9 +90,6 @@
     .rv { animation: rise linear both; animation-timeline: view(); animation-range: entry 0% entry 60%; }
     .intro .rows li { animation-timeline: auto; }
     .mast { animation: firm linear both; animation-timeline: scroll(root); animation-range: 0 96px; }
-    .home .brand .seal { animation: fade linear both; animation-timeline: scroll(root); animation-range: 20vh 45vh; }
-    .seal-x { animation: drift linear both; animation-timeline: scroll(root); animation-range: 0 70vh; }
-    .intro .seal-x { animation: none; }
     .label { view-timeline: --label block; }
     .label::after { animation: draw-x linear both; animation-timeline: --label; animation-range: entry 0% entry 100%; }
     .member { view-timeline: --member block; }

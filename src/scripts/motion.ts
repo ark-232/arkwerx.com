@@ -50,59 +50,32 @@ for (const box of document.querySelectorAll<HTMLElement>('.loop')) {
   button.hidden = false;
 }
 
-// Home index: one highlight glides to the row under the pointer or focus.
-const rows = document.querySelector<HTMLElement>('.rows');
-if (rows) {
-  const hl = rows.querySelector<HTMLElement>('.hl')!;
-  let at: HTMLElement | null = null;
-  const show = (li: HTMLElement) => {
-    if (li === at) return;
-    at?.classList.remove('at');
-    at = li;
-    li.classList.add('at');
-    const first = !rows.classList.contains('on');
-    hl.classList.toggle('snap', first);
-    hl.style.setProperty('--y', `${li.offsetTop}px`);
-    hl.style.setProperty('--h', `${li.offsetHeight}px`);
-    if (first) void hl.offsetWidth;
-    rows.classList.add('on');
-  };
-  const hide = () => {
-    rows.classList.remove('on');
-    at?.classList.remove('at');
-    at = null;
-  };
-  const hover = matchMedia('(hover: hover) and (pointer: fine)');
-  rows.addEventListener('pointerover', (e) => {
-    const li = (e.target as Element).closest<HTMLElement>('li');
-    if (hover.matches && li) show(li);
-  });
-  rows.addEventListener('pointerleave', () => hover.matches && !rows.contains(document.activeElement) && hide());
-  rows.addEventListener('focusin', (e) => show((e.target as Element).closest<HTMLElement>('li')!));
-  rows.addEventListener('focusout', (e) => !rows.contains(e.relatedTarget as Node) && hide());
-}
-
-// Home seal: leans a few degrees toward the pointer and catches the light.
-const seal = document.querySelector<HTMLElement>('.seal-x');
-const front = document.querySelector<HTMLElement>('.front');
-if (seal && front) {
+// Home sheet: hairline guides and two ruler readouts follow a fine pointer, unsmoothed.
+const sheet = document.querySelector<HTMLElement>('.sheet');
+if (sheet) {
   const fine = matchMedia('(hover: hover) and (pointer: fine)');
+  const [rx, ry] = sheet.querySelectorAll<HTMLElement>('.rd');
+  const pad = (n: number) => String(Math.round(n)).padStart(4, '0');
+  let at: PointerEvent | null = null;
   let frame = 0;
-  front.addEventListener('pointermove', (e) => {
-    if (!fine.matches || reduce.matches || frame) return;
-    frame = requestAnimationFrame(() => {
-      frame = 0;
-      const r = seal.getBoundingClientRect();
-      const x = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (window.innerWidth / 2)));
-      const y = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / (window.innerHeight / 2)));
-      seal.style.setProperty('--ry', `${(x * 7).toFixed(2)}deg`);
-      seal.style.setProperty('--rx', `${(-y * 5).toFixed(2)}deg`);
-      seal.style.setProperty('--gx', `${(50 + x * 40).toFixed(1)}%`);
-      seal.style.setProperty('--gy', `${(30 + y * 25).toFixed(1)}%`);
-      seal.style.setProperty('--glare', '1');
-    });
+  const aim = () => {
+    frame = 0;
+    const r = sheet.getBoundingClientRect();
+    const x = at!.clientX - r.left;
+    const y = at!.clientY - r.top;
+    const inside = x >= 0 && y >= 0 && x <= r.width && y <= r.height;
+    sheet.classList.toggle('aim', inside);
+    if (!inside) return;
+    sheet.classList.toggle('flip', x > r.width - 64);
+    sheet.style.setProperty('--px', `${x}px`);
+    sheet.style.setProperty('--py', `${y}px`);
+    rx.textContent = pad(x);
+    ry.textContent = pad(y);
+  };
+  document.addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse' || !fine.matches || reduce.matches) return;
+    at = e;
+    frame ||= requestAnimationFrame(aim);
   });
-  front.addEventListener('pointerleave', () => {
-    for (const p of ['--rx', '--ry', '--gx', '--gy', '--glare']) seal.style.removeProperty(p);
-  });
+  document.documentElement.addEventListener('pointerleave', () => sheet.classList.remove('aim'));
 }

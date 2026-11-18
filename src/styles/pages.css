@@ -1,70 +1,100 @@
-/* Front page */
-.front { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: clamp(1.5rem, 5vw, 4rem); padding-block: clamp(3rem, 10vw, 7rem) clamp(2.5rem, 7vw, 4.5rem); }
+/* Home is one drawing sheet: a hairline frame with rulers (Base.astro), the seal set in construction lines, a title block for a footer. */
+.home { --gut: clamp(1.75rem, 5vw, 3rem); --in: clamp(0.625rem, 1.25vw, 1.125rem); }
+.home body { position: relative; }
+.home .mast { position: relative; padding-top: var(--in); background: none; border-bottom-color: transparent; animation: none; }
+
+.sheet { --tick: var(--rule-2); position: absolute; inset: var(--in); z-index: -1; pointer-events: none; }
+.sheet .e, .sheet .ru, .sheet .g { position: absolute; }
+.sheet .e { background: var(--rule-2); }
+.sheet .et, .sheet .eb { left: 0; right: 0; height: 1px; }
+.sheet .el, .sheet .er { top: 0; bottom: 0; width: 1px; }
+.sheet .et { top: 0; transform-origin: left; }
+.sheet .el { left: 0; transform-origin: top; }
+.sheet .eb { bottom: 0; transform-origin: right; }
+.sheet .er { right: 0; transform-origin: bottom; }
+.sheet .rux { left: 0; right: 0; top: 0; height: 9px; transform-origin: left;
+  background: repeating-linear-gradient(90deg, var(--tick) 0 1px, transparent 1px 40px) 0 0 / 100% 9px no-repeat,
+    repeating-linear-gradient(90deg, var(--rule) 0 1px, transparent 1px 8px) 0 0 / 100% 4px no-repeat; }
+.sheet .ruy { top: 0; bottom: 0; left: 0; width: 9px; transform-origin: top;
+  background: repeating-linear-gradient(180deg, var(--tick) 0 1px, transparent 1px 40px) 0 0 / 9px 100% no-repeat,
+    repeating-linear-gradient(180deg, var(--rule) 0 1px, transparent 1px 8px) 0 0 / 4px 100% no-repeat; }
+
+/* Pointer guides with two readouts in the margin (motion.ts sets --px, --py and .aim on a fine pointer). */
+.sheet .g { background: rgb(244 241 234 / 0.14); opacity: 0; }
+.sheet .gv { top: 0; bottom: 0; left: 0; width: 1px; translate: var(--px, 0) 0; }
+.sheet .gh { left: 0; right: 0; top: 0; height: 1px; translate: 0 var(--py, 0); }
+.sheet .rd { position: absolute; top: 0; left: 0; font: 400 0.6875rem/1 var(--serif); font-variant-numeric: lining-nums tabular-nums; letter-spacing: 0.08em; color: var(--fog); opacity: 0; }
+.sheet .rdx { top: calc(var(--in) / -2); translate: calc(var(--px, 0px) + 6px) -50%; }
+.sheet.flip .rdx { translate: calc(var(--px, 0px) - 100% - 6px) -50%; }
+.sheet .rdy { left: calc(var(--in) / -2); writing-mode: vertical-rl; rotate: 180deg; translate: -50% calc(var(--py, 0px) + 6px); }
+.sheet.aim :is(.g, .rd) { opacity: 1; }
+
+.front { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: clamp(1.5rem, 5vw, 4rem); padding-block: clamp(2rem, 6vw, 4rem) clamp(2rem, 4vw, 3rem); }
 .kicker { display: inline-block; font: 500 0.82rem/1.2 var(--caps); letter-spacing: 0.18em; text-transform: lowercase; color: var(--madder); margin-bottom: 1.4rem; }
 .front .lede { margin-top: 1.4rem; }
 .w { display: inline-block; position: relative; }
 
-/* The seal sits in a pool of light, leans toward the pointer and catches it in a glint (motion.ts sets the vars). */
-@property --gx { syntax: "<percentage>"; inherits: true; initial-value: 30%; }
-.seal-x {
-  position: relative; width: clamp(7.5rem, 17vw, 13.5rem); aspect-ratio: 867.3 / 1029.4; view-transition-name: seal;
-  transform: perspective(60rem) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
-  transition: transform 700ms var(--e-out);
-}
-.seal-x::before { content: ""; position: absolute; inset: -40% -20%; z-index: -1; background: radial-gradient(closest-side, rgb(244 241 234 / 0.1), rgb(244 241 234 / 0.035) 55%, transparent); pointer-events: none; }
-.seal-x svg, .seal-x .eagle, .seal-x .glare { position: absolute; inset: 0; width: 100%; height: 100%; }
-.seal-x .glare {
-  -webkit-mask: url("/seal-white.svg") 0 0 / 100% 100% no-repeat; mask: url("/seal-white.svg") 0 0 / 100% 100% no-repeat;
-  background: radial-gradient(55% 40% at var(--gx) var(--gy, 22%), rgb(255 248 240 / 0.3), transparent 70%);
-  opacity: var(--glare, 0); transition: opacity 500ms var(--e-out); pointer-events: none;
-}
+/* The seal in its construction: centre axes, the circle through its three points, one dimension under it. */
+.drawing { position: relative; width: clamp(15rem, 26vw, 22rem); aspect-ratio: 1527.3 / 1479.4; }
+.cons { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.cons path { fill: none; stroke: var(--bone); stroke-width: 1; vector-effect: non-scaling-stroke; transform-box: fill-box; }
+.cons .ax { opacity: 0.2; stroke-dasharray: 96 22 14 22; transform-origin: center; }
+.cons .ci { opacity: 0.26; }
+.cons .ext { opacity: 0.18; transform-origin: top; }
+.cons .dim, .cons .tk { opacity: 0.36; transform-origin: center; }
+.drawing .seal-x { position: absolute; left: 21.607%; top: 16.899%; width: 56.786%; aspect-ratio: 867.3 / 1029.4; view-transition-name: seal; }
+.seal-x svg, .seal-x .eagle { position: absolute; inset: 0; width: 100%; height: 100%; }
 @media (max-width: 40em) {
-  .front { grid-template-columns: 1fr; }
-  .seal-x { order: -1; width: 5.5rem; }
+  .front { grid-template-columns: 1fr; gap: 0.5rem; }
+  .drawing { order: -1; justify-self: center; width: 13.5rem; }
 }
 
+/* Index: the row in hand keeps its ink and draws a madder rule; the others step back. Descriptors always show. */
 .rows { position: relative; }
 .rows ul { position: relative; }
 .rows ul::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--rule-2); transform-origin: left; }
-.rows li { border-bottom: 1px solid var(--rule); }
+.rows li { position: relative; border-bottom: 1px solid var(--rule); }
+.rows li::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; background: var(--madder); transform: scaleX(0); transform-origin: left; transition: transform var(--t-exit) var(--e-out); }
 .rows a {
   display: grid; grid-template-columns: 3rem 10rem 1fr auto; align-items: baseline; gap: 1rem;
-  padding: 1.35rem 0.5rem; text-decoration: none; transition: background-color var(--t-hover) var(--e-out);
+  padding: 1.35rem 0.5rem; text-decoration: none;
 }
-.rows .no, .rows .name, .rows .text, .rows .ic { transition: translate var(--t-exit) var(--e-out), color var(--t-hover); }
+.rows :is(.no, .name, .text, .ic) { transition: color 300ms var(--e-out), translate var(--t-exit) var(--e-out); }
 .rows .no { font: 500 0.85rem/1 var(--caps); letter-spacing: 0.1em; color: var(--madder); }
 .rows .name { font: 500 1.35rem/1.2 var(--caps); letter-spacing: 0.05em; }
 .rows .text { color: var(--fog); }
 .rows .ic { align-self: center; color: var(--madder); }
-html:not(.js) .rows a:hover, .rows a:active { background: var(--raise); }
-
-/* One highlight glides between rows with engraved corner marks; the other rows step back. */
-.rows .hl {
-  --c: var(--madder); --k: 0.7rem;
-  position: absolute; left: 0; right: 0; top: 0; height: var(--h, 0); translate: 0 var(--y, 0);
-  pointer-events: none; opacity: 0;
-  background:
-    linear-gradient(var(--c), var(--c)) 0 0 / var(--k) 1px, linear-gradient(var(--c), var(--c)) 0 0 / 1px var(--k),
-    linear-gradient(var(--c), var(--c)) 100% 0 / var(--k) 1px, linear-gradient(var(--c), var(--c)) 100% 0 / 1px var(--k),
-    linear-gradient(var(--c), var(--c)) 0 100% / var(--k) 1px, linear-gradient(var(--c), var(--c)) 0 100% / 1px var(--k),
-    linear-gradient(var(--c), var(--c)) 100% 100% / var(--k) 1px, linear-gradient(var(--c), var(--c)) 100% 100% / 1px var(--k),
-    rgb(244 241 234 / 0.035);
-  background-repeat: no-repeat;
-  transition: translate 420ms var(--e-out), height 420ms var(--e-out), opacity 240ms var(--e-out);
+.rows a:active { background: var(--raise); }
+.rows li:has(a:focus-visible)::after { transform: scaleX(1); transition-duration: 520ms; }
+.rows li:has(a:focus-visible) .no { color: var(--madder-hi); }
+.rows ul:has(a:focus-visible) li:not(:has(a:focus-visible)) :is(.name, .no) { color: var(--dim); }
+.rows ul:has(a:focus-visible) li:not(:has(a:focus-visible)) .text { color: var(--dim); }
+@media (hover: hover) {
+  .rows li:has(a:hover)::after { transform: scaleX(1); transition-duration: 520ms; }
+  .rows li:has(a:hover) .no { color: var(--madder-hi); }
+  .rows ul:has(a:hover) li:not(:has(a:hover)) :is(.name, .no, .text) { color: var(--dim); }
+  .rows a:hover .ic { translate: 3px -3px; }
 }
-.rows .hl.snap { transition: opacity 240ms var(--e-out); }
-.rows.on .hl { opacity: 1; }
-.rows.on li :is(.name, .text) { transition: color 260ms var(--e-out), translate var(--t-exit) var(--e-out); }
-.rows.on li:not(.at) .name { color: var(--fog); }
-.rows.on li:not(.at) .text { color: var(--dim); }
-.rows a:hover :is(.no, .name, .text) { translate: 6px 0; transition-duration: var(--t-hover); }
-.rows a:hover .ic { translate: 3px -3px; transition-duration: var(--t-hover); }
-.rows a:hover .text { color: var(--bone); }
-.rows a:active { scale: 0.995; }
 @media (max-width: 40em) {
   .rows a { grid-template-columns: 2.25rem 1fr auto; }
-  .rows .text { grid-column: 2; font-size: 0.95rem; }
+  .rows a { row-gap: 0.4rem; }
+  .rows .text { grid-column: 2; font-size: 1rem; }
   .rows .ic { grid-row: 1; grid-column: 3; }
+}
+
+/* Title block: the home footer, bottom right of the sheet. */
+.home .foot { margin-top: clamp(2rem, 5vw, 3rem); border-top: 0; }
+.tbk { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 1.25rem 3rem; }
+.foot .tbk { padding-block: 0 clamp(1.75rem, 3vw, 2.5rem); }
+.foot .legal { gap: 0.4rem 1.5rem; }
+.tb { display: grid; grid-template-columns: auto auto; border: 1px solid var(--rule-2); }
+.tb p { display: block; padding: 0.6rem 1.1rem; font: 500 0.8rem/1.2 var(--caps); letter-spacing: 0.14em; text-transform: lowercase; color: var(--fog); }
+.tb p:nth-child(odd) { border-right: 1px solid var(--rule-2); }
+.tb p:nth-child(-n + 2) { border-bottom: 1px solid var(--rule-2); }
+.tb .tb-name { color: var(--bone); }
+@media (max-width: 40em) {
+  .tbk { flex-direction: column-reverse; align-items: stretch; }
+  .tb p { padding-inline: 0.8rem; letter-spacing: 0.1em; }
 }
 
 /* Inner pages */

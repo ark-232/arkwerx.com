@@ -1,4 +1,4 @@
-/* ArkWerx brand v1, dark: a navy ground, bone ink, oxblood only in the seal. Ratios are WCAG against --ground. */
+/* ArkWerx brand v1, dark: an ink ground, bone type, oxblood only in the seal. Ratios are WCAG against --ground. */
 @font-face { font-family: "Spectral SC"; src: url("/fonts/SpectralSC-Medium.woff2") format("woff2"); font-weight: 500; font-display: swap; }
 @font-face { font-family: "Spectral"; src: url("/fonts/Spectral-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 @font-face { font-family: "Spectral"; src: url("/fonts/Spectral-Italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
@@ -7,16 +7,17 @@
 :root {
   color-scheme: dark;
 
-  --ground: #1C2A3B;
-  --raise: #22334A;
-  --mat: #142030;
-  --bone: #F4F1EA;   /* 12.9 */
-  --fog: #A9B0BA;    /* 6.65 */
-  --dim: #8E97A3;    /* 4.92 */
-  --madder: #D38A8E; /* 5.40 */
-  --ctl: #6B7788;    /* 3.20, form borders */
-  --rule: rgb(244 241 234 / 0.12);
-  --rule-2: rgb(244 241 234 / 0.28);
+  --ground: #0B111A;
+  --raise: #111A26;
+  --mat: #0E151F;
+  --bone: #F4F1EA;   /* 16.8 */
+  --fog: #A9B0BA;    /* 8.66 */
+  --dim: #8E97A3;    /* 6.41 */
+  --madder: #D38A8E; /* 7.03 */
+  --madder-hi: #F2C6C8; /* 12.3 */
+  --ctl: #6B7788;    /* 4.16, form borders */
+  --rule: rgb(244 241 234 / 0.1);
+  --rule-2: rgb(244 241 234 / 0.22);
   --ox: #7B1E24;
 
   --caps: "Spectral SC", Georgia, "Times New Roman", serif;
@@ -32,7 +33,6 @@
   --t-enter: 420ms;
   --t-morph: 520ms;
   --t-draw: 1100ms;
-  --stream: 45ms;
 
   --gut: clamp(1.25rem, 5vw, 3rem);
   --max: 72rem;

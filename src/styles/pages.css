@@ -4,14 +4,20 @@
 .front .lede { margin-top: 1.4rem; }
 .w { display: inline-block; position: relative; }
 
-/* The seal in its construction: axes and a circle on the shield's optical centre (the centre of the largest circle its bowl holds), one dimension under its tip. */
+/* The seal in its construction: centre lines and a graduated bezel on the shield's optical centre (the centre of the largest circle its bowl holds); a madder index takes the pointer's bearing. */
 .drawing { position: relative; width: clamp(15rem, 26vw, 22rem); aspect-ratio: 1587.3 / 1595; }
 .cons { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .cons path { fill: none; stroke: var(--bone); stroke-width: 1; vector-effect: non-scaling-stroke; transform-box: fill-box; }
 .cons .ax { opacity: 0.12; stroke-dasharray: 96 22 14 22; transform-origin: center; }
 .cons .ci { opacity: 0.16; }
-.cons .ext { opacity: 0.16; transform-origin: top; }
-.cons .dim, .cons .tk { opacity: 0.26; transform-origin: center; }
+.cons .ref { opacity: 0.1; stroke-dasharray: 0.004 0.006; }
+.cons .tk { opacity: 0.2; }
+.cons .tk-m { opacity: 0.3; }
+.cons .tk-x { opacity: 0.42; }
+.cons g { transform-box: fill-box; transform-origin: center; }
+.cons .hold { stroke: none; }
+.cons .mark { fill: var(--madder); stroke: none; }
+.cons .brg { transform: rotate(var(--brg, 0deg)); transition: transform 1400ms var(--e-out); }
 .drawing .seal-x { position: absolute; left: 22.680%; top: 15.674%; width: 54.640%; aspect-ratio: 867.3 / 1029.4; view-transition-name: seal; }
 .seal-x svg, .seal-x .eagle { position: absolute; inset: 0; width: 100%; height: 100%; }
 @media (max-width: 40em) {

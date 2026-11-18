@@ -80,3 +80,17 @@ if (sheet) {
   addEventListener('scroll', () => { if (at) frame ||= requestAnimationFrame(aim); }, { passive: true });
   document.documentElement.addEventListener('pointerleave', () => sheet.classList.remove('aim'));
 }
+
+// The bezel's index turns to the pointer's bearing from the seal, the short way round.
+const drawing = document.querySelector<HTMLElement>('.drawing');
+if (drawing) {
+  const fine = matchMedia('(hover: hover) and (pointer: fine)');
+  let turn = 0;
+  document.addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse' || !fine.matches || reduce.matches) return;
+    const r = drawing.getBoundingClientRect();
+    const deg = (Math.atan2(e.clientX - r.left - r.width / 2, r.top + r.height / 2 - e.clientY) * 180) / Math.PI;
+    turn += ((((deg - turn) % 360) + 540) % 360) - 180;
+    drawing.style.setProperty('--brg', `${turn.toFixed(1)}deg`);
+  });
+}

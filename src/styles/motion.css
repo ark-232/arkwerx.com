@@ -11,6 +11,7 @@
 @keyframes grow-x { from { transform: scaleX(0); } }
 @keyframes grow-y { from { transform: scaleY(0); } }
 @keyframes settle { from { opacity: 0.75; } }
+@keyframes spin { to { transform: rotate(360deg); } }
 @keyframes sheen { from { background-position: 100% 0; } to { background-position: 0 0; } }
 @keyframes develop { from { opacity: 0; filter: blur(8px) brightness(0.55); } }
 @keyframes page-out { to { opacity: 0; translate: 0 -6px; } }
@@ -33,6 +34,8 @@
   /* Every page arrives: the heading rises and the section rules draw. */
   .page > .display, html:not(.intro) .front > div { animation: rise var(--t-enter) var(--e-out) both; }
   html:not(.intro) .drawing { animation: fade 600ms var(--e-out) both; }
+  /* The bezel turns once every four minutes. */
+  .cons .bezel { animation: spin 240s linear infinite; }
   .members::before, .rows ul::before { animation: draw-x 700ms var(--e-out) 120ms both; }
 
   /*
@@ -44,10 +47,10 @@
   .intro .sheet .ru { animation-delay: 60ms; }
   .intro .cons .ax-v { animation: grow-y 700ms var(--e-draw) 450ms both, settle 500ms var(--e-out) 1300ms both; }
   .intro .cons .ax-h { animation: grow-x 700ms var(--e-draw) 450ms both, settle 500ms var(--e-out) 1300ms both; }
-  .intro .cons .ci { stroke-dasharray: 1 1; animation: draw 700ms var(--e-draw) 450ms both, settle 500ms var(--e-out) 1300ms both; }
-  .intro .cons .ext { animation: grow-y 350ms var(--e-out) 750ms both, settle 500ms var(--e-out) 1300ms both; }
-  .intro .cons .dim { animation: grow-x 400ms var(--e-draw) 800ms both, settle 500ms var(--e-out) 1300ms both; }
-  .intro .cons .tk { animation: fade 150ms linear 1100ms both; }
+  .intro .cons .ref { animation: fade 600ms var(--e-out) 700ms both; }
+  .intro .cons .ci:not(.ref) { stroke-dasharray: 1 1; animation: draw 700ms var(--e-draw) 450ms both, settle 500ms var(--e-out) 1300ms both; }
+  .intro .cons .tk { stroke-dasharray: 1 1; animation: draw 800ms var(--e-draw) 650ms both; }
+  .intro .cons .brg { animation: fade 400ms var(--e-out) 1350ms both; }
   .intro .seal-x .edge path, .intro .seal-x .kl path { stroke-dasharray: 1; animation: draw 650ms var(--e-draw) 950ms both; }
   .intro .seal-x .kl path { animation-delay: 1050ms; }
   .intro .seal-x .field { animation: fade 450ms var(--e-out) 1200ms both; }

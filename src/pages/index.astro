@@ -4,6 +4,17 @@ import SealMark from '../components/SealMark.astro';
 import { site } from '../content/site';
 import '../styles/pages.css';
 
+const C = { x: 433.65, y: 548 };
+const at = (deg: number, r: number) => {
+  const a = (deg * Math.PI) / 180;
+  return `${(C.x + r * Math.sin(a)).toFixed(1)} ${(C.y - r * Math.cos(a)).toFixed(1)}`;
+};
+const circle = (r: number) => `M${at(0, r)}A${r} ${r} 0 1 1 ${at(180, r)}A${r} ${r} 0 1 1 ${at(0, r)}`;
+const ticks = (from: number, step: number, inner: number, skip = 0) =>
+  Array.from({ length: 360 / step }, (_, i) => i * step)
+    .filter((d) => !skip || d % skip)
+    .map((d) => `M${at(d, from)}L${at(d, inner)}`)
+    .join('');
 const words = (text: string) => text.split(' ');
 const rows = [
   { no: 'I', href: '/projects', label: 'Projects', text: 'Works and collaborations.' },
@@ -23,12 +34,20 @@ const rows = [
     </div>
     <div class="drawing">
       <svg class="cons" viewBox="-360 -250 1587.3 1595" aria-hidden="true" focusable="false">
-        <path class="ax ax-v" d="M433.65 -235V1330" />
-        <path class="ax ax-h" d="M-345 548H1212.3" />
-        <path class="ci" pathLength="1" d="M433.65 -192A740 740 0 1 1 433.65 1288A740 740 0 1 1 433.65 -192" />
-        <path class="ext" d="M2 560V1097M865.3 560V1097" />
-        <path class="dim" d="M2 1064H865.3" />
-        <path class="tk" d="M-18 1084L22 1044M845.3 1084L885.3 1044" />
+        <path class="ax ax-v" d="M433.65 -244V1340" />
+        <path class="ax ax-h" d="M-354 548H1221.3" />
+        <path class="ci ref" pathLength="1" d={circle(620)} />
+        <path class="ci" pathLength="1" d={circle(772)} />
+        <path class="ci" pathLength="1" d={circle(718)} />
+        <g class="bezel">
+          <path class="tk" pathLength="1" d={ticks(772, 2, 762, 10)} />
+          <path class="tk tk-m" pathLength="1" d={ticks(772, 10, 748, 30)} />
+          <path class="tk tk-x" pathLength="1" d={ticks(772, 30, 718)} />
+        </g>
+        <g class="brg">
+          <path class="hold" d={circle(772)} />
+          <path class="mark" d={`M${at(0, 724)}L${at(-1.3, 756)}L${at(1.3, 756)}Z`} />
+        </g>
       </svg>
       <SealMark />
     </div>
